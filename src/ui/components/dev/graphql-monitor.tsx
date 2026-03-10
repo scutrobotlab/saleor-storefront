@@ -254,7 +254,7 @@ export function createMonitoredFetch(originalFetch: FetchFn, source?: RequestSou
 				throw e;
 			}
 
-			error = e instanceof Error ? e.message : "Network error";
+			error = e instanceof Error ? e.message : "网络错误";
 			throw e;
 		} finally {
 			// Skip logging aborted requests - they're expected in dev (React Strict Mode)
@@ -329,9 +329,9 @@ export function GraphQLMonitor() {
 				lastAlertRef.current = now;
 				const topOp = sortedOps[0];
 				setAlert(
-					`⚠️ High request rate: ${rate.toFixed(1)}/sec!\n` +
-						`Most frequent: ${topOp?.[0]} (${topOp?.[1].count} calls)\n` +
-						`Possible infinite loop detected!`,
+					`⚠️ 请求速率过高：${rate.toFixed(1)}次/秒！\n` +
+						`最频繁操作：${topOp?.[0]} (${topOp?.[1].count} 次调用)\n` +
+						`可能检测到无限循环！`,
 				);
 				setIsOpen(true);
 			}
@@ -359,7 +359,7 @@ export function GraphQLMonitor() {
 			<button
 				onClick={() => setIsOpen(true)}
 				className="fixed bottom-4 right-4 z-[9999] flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg transition-transform hover:scale-110"
-				title="GraphQL Monitor"
+				title="GraphQL 监控器"
 			>
 				<Activity className="h-5 w-5" />
 				{stats.rate > RATE_ALERT_THRESHOLD && (
@@ -377,17 +377,17 @@ export function GraphQLMonitor() {
 			<div className="flex items-center justify-between border-b border-zinc-700 bg-zinc-800 px-3 py-2">
 				<div className="flex items-center gap-2">
 					<Activity className="h-4 w-4 text-green-400" />
-					<span className="font-semibold">GraphQL Monitor</span>
+					<span className="font-semibold">GraphQL 监控器</span>
 				</div>
 				<div className="flex items-center gap-1">
 					<button
 						onClick={() => setIsExpanded(!isExpanded)}
 						className="rounded p-1 hover:bg-zinc-700"
-						title={isExpanded ? "Collapse" : "Expand"}
+						title={isExpanded ? "折叠" : "展开"}
 					>
 						{isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
 					</button>
-					<button onClick={() => setIsOpen(false)} className="rounded p-1 hover:bg-zinc-700" title="Minimize">
+					<button onClick={() => setIsOpen(false)} className="rounded p-1 hover:bg-zinc-700" title="最小化">
 						<X className="h-4 w-4" />
 					</button>
 				</div>
@@ -407,23 +407,23 @@ export function GraphQLMonitor() {
 			{/* Stats */}
 			<div className="grid grid-cols-4 gap-2 border-b border-zinc-700 px-3 py-2">
 				<div>
-					<div className="text-zinc-400">Requests</div>
+					<div className="text-zinc-400">请求数</div>
 					<div className="text-lg font-bold">{stats.total}</div>
 				</div>
 				<div>
-					<div className="text-zinc-400">Errors</div>
+					<div className="text-zinc-400">错误数</div>
 					<div className={`text-lg font-bold ${stats.errors > 0 ? "text-red-400" : ""}`}>{stats.errors}</div>
 				</div>
 				<div>
-					<div className="text-zinc-400">Retries</div>
+					<div className="text-zinc-400">重试次数</div>
 					<div className={`text-lg font-bold ${stats.retries > 0 ? "text-yellow-400" : ""}`}>
 						{stats.retries}
 					</div>
 				</div>
 				<div>
-					<div className="text-zinc-400">Rate</div>
+					<div className="text-zinc-400">速率</div>
 					<div className={`text-lg font-bold ${stats.rate > RATE_ALERT_THRESHOLD ? "text-red-400" : ""}`}>
-						{stats.rate.toFixed(1)}/s
+						{stats.rate.toFixed(1)}次/秒
 					</div>
 				</div>
 			</div>
@@ -436,7 +436,7 @@ export function GraphQLMonitor() {
 				>
 					<span className="flex items-center gap-2 text-red-400">
 						<AlertTriangle className="h-3.5 w-3.5" />
-						<span>{stats.recentErrors.length} recent errors</span>
+						<span>{stats.recentErrors.length} 条近期错误</span>
 					</span>
 					{showErrors ? (
 						<ChevronUp className="h-4 w-4 text-red-400" />
@@ -465,7 +465,7 @@ export function GraphQLMonitor() {
 							</div>
 							<div className="mt-1 truncate text-red-400/80">{err.error}</div>
 							<div className="mt-1 text-[10px] text-zinc-500">
-								{new Date(err.timestamp).toLocaleTimeString()} · Click for details
+								{new Date(err.timestamp).toLocaleTimeString()} · 点击查看详情
 							</div>
 						</button>
 					))}
@@ -487,21 +487,21 @@ export function GraphQLMonitor() {
 					<div className="space-y-2 p-3">
 						{expandedError.errorCode && (
 							<div>
-								<div className="text-[10px] uppercase text-zinc-500">Error Code</div>
+								<div className="text-[10px] uppercase text-zinc-500">错误代码</div>
 								<div className="rounded bg-red-900/50 px-2 py-1 font-mono text-red-300">
 									{expandedError.errorCode}
 								</div>
 							</div>
 						)}
 						<div>
-							<div className="text-[10px] uppercase text-zinc-500">Message</div>
+							<div className="text-[10px] uppercase text-zinc-500">消息</div>
 							<div className="whitespace-pre-wrap break-words rounded bg-zinc-800 p-2 text-red-300">
 								{expandedError.error}
 							</div>
 						</div>
 						{expandedError.variables && Object.keys(expandedError.variables).length > 0 && (
 							<div>
-								<div className="text-[10px] uppercase text-zinc-500">Variables</div>
+								<div className="text-[10px] uppercase text-zinc-500">变量</div>
 								<pre className="max-h-32 overflow-auto whitespace-pre-wrap break-words rounded bg-zinc-800 p-2 text-zinc-300">
 									{JSON.stringify(expandedError.variables, null, 2)}
 								</pre>
@@ -522,7 +522,7 @@ export function GraphQLMonitor() {
 				}}
 				className="flex w-full items-center justify-between border-b border-zinc-700 px-3 py-2 text-left hover:bg-zinc-800"
 			>
-				<span className="text-zinc-400">Recent requests</span>
+				<span className="text-zinc-400">近期请求</span>
 				{showRequests ? (
 					<ChevronUp className="h-4 w-4 text-zinc-400" />
 				) : (
@@ -548,12 +548,12 @@ export function GraphQLMonitor() {
 									</span>
 									{req.isRetry && (
 										<span className="rounded bg-yellow-900/50 px-1.5 py-0.5 text-[10px] text-yellow-300">
-											retry #{req.retryCount}
+											重试次数：#{req.retryCount}
 										</span>
 									)}
 								</span>
 								<span className="text-[10px] text-zinc-500">
-									{req.duration ? `${req.duration.toFixed(0)}ms` : ""}
+									{req.duration ? `${req.duration.toFixed(0)}毫秒` : ""}
 								</span>
 							</div>
 							{req.error && <div className="mt-1 truncate text-xs text-red-400/80">{req.error}</div>}
@@ -563,7 +563,7 @@ export function GraphQLMonitor() {
 						</button>
 					))}
 					{stats.recentRequests.length === 0 && (
-						<div className="px-3 py-4 text-center text-zinc-500">No requests yet</div>
+						<div className="px-3 py-4 text-center text-zinc-500">暂无请求</div>
 					)}
 				</div>
 			)}
@@ -586,26 +586,26 @@ export function GraphQLMonitor() {
 						<div className="flex flex-wrap gap-4 text-xs">
 							{expandedRequest.duration && (
 								<div>
-									<span className="text-zinc-500">Duration: </span>
-									<span className="text-green-400">{expandedRequest.duration.toFixed(0)}ms</span>
+									<span className="text-zinc-500">耗时：</span>
+									<span className="text-green-400">{expandedRequest.duration.toFixed(0)}毫秒</span>
 								</div>
 							)}
 							<div>
-								<span className="text-zinc-500">Status: </span>
+								<span className="text-zinc-500">状态：</span>
 								<span className={expandedRequest.error ? "text-red-400" : "text-green-400"}>
-									{expandedRequest.error ? "Error" : "Success"}
+									{expandedRequest.error ? "错误" : "成功"}
 								</span>
 							</div>
 							{expandedRequest.isRetry && (
 								<div>
-									<span className="text-zinc-500">Retry: </span>
+									<span className="text-zinc-500">重试：</span>
 									<span className="text-yellow-400">#{expandedRequest.retryCount}</span>
 								</div>
 							)}
 						</div>
 						{expandedRequest.error && (
 							<div>
-								<div className="text-[10px] uppercase text-zinc-500">Error</div>
+								<div className="text-[10px] uppercase text-zinc-500">错误详情</div>
 								<div className="whitespace-pre-wrap break-words rounded bg-red-950/30 p-2 text-xs text-red-300">
 									{expandedRequest.errorCode && (
 										<span className="mr-2 rounded bg-red-900/50 px-1.5 py-0.5 text-[10px]">
@@ -618,7 +618,7 @@ export function GraphQLMonitor() {
 						)}
 						{expandedRequest.variables && Object.keys(expandedRequest.variables).length > 0 && (
 							<div>
-								<div className="text-[10px] uppercase text-zinc-500">Variables</div>
+								<div className="text-[10px] uppercase text-zinc-500">变量</div>
 								<pre className="max-h-32 overflow-auto whitespace-pre-wrap break-words rounded bg-zinc-900 p-2 text-xs text-zinc-300">
 									{JSON.stringify(expandedRequest.variables, null, 2)}
 								</pre>
@@ -634,31 +634,31 @@ export function GraphQLMonitor() {
 			{/* Operations list (expanded) */}
 			{isExpanded && (
 				<div className="max-h-64 overflow-y-auto">
-					<div className="px-3 py-2 text-zinc-400">Top Operations</div>
+					<div className="px-3 py-2 text-zinc-400">热门操作</div>
 					{stats.operations.map(([name, opStats]) => (
 						<div key={name} className="flex items-center justify-between border-t border-zinc-800 px-3 py-2">
 							<div className="truncate">
 								<div className="font-medium">{name}</div>
 								<div className="text-zinc-500">
-									{opStats.avgDuration > 0 && `${opStats.avgDuration.toFixed(0)}ms avg`}
+									{opStats.avgDuration > 0 && `${opStats.avgDuration.toFixed(0)}毫秒 平均`}
 								</div>
 							</div>
 							<div className="text-right">
 								<div className={opStats.count > 100 ? "text-yellow-400" : ""}>{opStats.count}</div>
-								{opStats.errors > 0 && <div className="text-red-400">{opStats.errors} err</div>}
-								{opStats.retries > 0 && <div className="text-yellow-400">{opStats.retries} retry</div>}
+								{opStats.errors > 0 && <div className="text-red-400">{opStats.errors} 次错误</div>}
+								{opStats.retries > 0 && <div className="text-yellow-400">{opStats.retries} 次重试</div>}
 							</div>
 						</div>
 					))}
 					{stats.operations.length === 0 && (
-						<div className="px-3 py-4 text-center text-zinc-500">No requests yet</div>
+						<div className="px-3 py-4 text-center text-zinc-500">暂无请求</div>
 					)}
 				</div>
 			)}
 
 			{/* Footer */}
 			<div className="flex items-center justify-between border-t border-zinc-700 bg-zinc-800 px-3 py-1.5 text-zinc-500">
-				<span className="text-[10px]">Dev mode only</span>
+				<span className="text-[10px]">仅限开发模式</span>
 				<div className="flex items-center gap-2">
 					<button
 						onClick={() => {
@@ -666,7 +666,7 @@ export function GraphQLMonitor() {
 							const next = current === 0 ? 0.5 : 0;
 							setSimulateFailureRate(next);
 							// Force re-render
-							setAlert(next > 0 ? `🧪 Failure simulation ON (${next * 100}%)` : null);
+							setAlert(next > 0 ? `🧪 故障模拟开启 (${next * 100}%)` : null);
 						}}
 						className={`rounded px-2 py-0.5 text-[10px] ${
 							getSimulateFailureRate() > 0
@@ -674,7 +674,7 @@ export function GraphQLMonitor() {
 								: "bg-zinc-700 hover:bg-zinc-600"
 						}`}
 					>
-						{getSimulateFailureRate() > 0 ? "Chaos: ON" : "Chaos: OFF"}
+						{getSimulateFailureRate() > 0 ? "混沌模式：开启" : "混沌模式：关闭"}
 					</button>
 				</div>
 			</div>

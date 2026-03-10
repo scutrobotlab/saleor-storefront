@@ -14,9 +14,9 @@
 
 interface LogoProps {
 	className?: string;
-	/** Accessible label for the logo */
+	/** 标志的可访问标签 */
 	ariaLabel?: string;
-	/** Invert colors (for dark backgrounds like footer) */
+	/** 反转颜色（适用于页脚等深色背景） */
 	inverted?: boolean;
 }
 
@@ -27,7 +27,7 @@ interface LogoProps {
  * Uses explicit width/height + aspect-ratio to prevent CLS while
  * allowing flexible sizing via className.
  */
-export const Logo = ({ className, ariaLabel = "Paper by Saleor", inverted = false }: LogoProps) => {
+export const Logo = ({ className, ariaLabel = "Paper by Saleor 标志", inverted = false }: LogoProps) => {
 	// When inverted, swap the light/dark mode logic
 	const lightModeLogo = inverted ? "/logo-dark.svg" : "/logo.svg";
 	const darkModeLogo = inverted ? "/logo.svg" : "/logo-dark.svg";

@@ -46,7 +46,7 @@ export const generateMetadata = async (props: PageProps, parent: ResolvingMetada
 	const plainDescription = parseEditorJSToText(collection?.description);
 
 	return {
-		title: `${collection?.name || "Collection"} | ${collection?.seoTitle || (await parent).title?.absolute}`,
+		title: `${collection?.name || "精选系列"} | ${collection?.seoTitle || (await parent).title?.absolute}`,
 		description: collection?.seoDescription || plainDescription || collection?.seoTitle || collection?.name,
 	};
 };
@@ -81,7 +81,7 @@ async function CollectionContent({
 	const plainDescription = parseEditorJSToText(collection.description);
 
 	const breadcrumbs = [
-		{ label: "Home", href: `/${params.channel}` },
+		{ label: "首页", href: `/${params.channel}` },
 		{ label: collection.name, href: `/${params.channel}/collections/${params.slug}` },
 	];
 

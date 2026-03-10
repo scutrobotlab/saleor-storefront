@@ -26,12 +26,12 @@ export function AccountAddressCard({
 						</span>
 						{isDefaultShipping && (
 							<span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
-								Default shipping
+								默认收货地址
 							</span>
 						)}
 						{isDefaultBilling && (
 							<span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
-								Default billing
+								默认账单地址
 							</span>
 						)}
 					</div>

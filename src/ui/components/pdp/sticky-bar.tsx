@@ -48,7 +48,7 @@ function StickyAddButton() {
 			)}
 		>
 			<ShoppingBag className="h-4 w-4" />
-			{pending ? "Adding..." : "Add to bag"}
+			{pending ? "正在添加..." : "添加到购物袋"}
 		</Button>
 	);
 }

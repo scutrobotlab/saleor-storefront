@@ -47,13 +47,13 @@ export const HybridAddressSelector: FC<HybridAddressSelectorProps> = ({
 	selectedAddressId,
 	onSelectAddress,
 	defaultAddressId,
-	emptyMessage = "You don't have any saved addresses yet.",
+	emptyMessage = "您还没有保存任何地址。",
 	name = "shippingAddress",
 	addressType = "SHIPPING",
 	onDefaultChange,
 	onAddNew,
 	onEdit,
-	sheetTitle = "Select address",
+	sheetTitle = "选择地址",
 }) => {
 	const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -146,7 +146,7 @@ export const HybridAddressSelector: FC<HybridAddressSelectorProps> = ({
 					onClick={() => setSheetOpen(true)}
 					className="border-muted-foreground/50 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
 				>
-					Select an address
+					选择一个地址
 				</button>
 			)}
 
@@ -178,7 +178,7 @@ export const HybridAddressSelector: FC<HybridAddressSelectorProps> = ({
 						className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"
 					>
 						{isSettingDefault && <LoadingSpinner />}
-						Set as my default {addressType === "SHIPPING" ? "shipping" : "billing"} address
+						设置为我的默认 {addressType === "SHIPPING" ? "配送" : "账单"} 地址
 					</Label>
 				</div>
 			)}

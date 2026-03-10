@@ -40,7 +40,7 @@ export const AddressSelector: FC<AddressSelectorProps> = ({
 	selectedAddressId,
 	onSelectAddress,
 	defaultAddressId,
-	emptyMessage = "You don't have any saved addresses yet.",
+	emptyMessage = "您还没有保存任何地址。",
 	name = "shippingAddress",
 	addressType = "SHIPPING",
 	onDefaultChange,
@@ -135,7 +135,7 @@ export const AddressSelector: FC<AddressSelectorProps> = ({
 								</span>
 								{isDefault && (
 									<span className="rounded bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-										Default
+										默认
 									</span>
 								)}
 							</div>
@@ -160,7 +160,7 @@ export const AddressSelector: FC<AddressSelectorProps> = ({
 								}}
 								className="shrink-0 rounded px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 							>
-								Edit
+								编辑
 							</button>
 						)}
 					</label>
@@ -181,7 +181,7 @@ export const AddressSelector: FC<AddressSelectorProps> = ({
 						className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"
 					>
 						{isSettingDefault && <LoadingSpinner />}
-						Set as my default {addressType === "SHIPPING" ? "shipping" : "billing"} address
+						设为我的默认{addressType === "SHIPPING" ? "收货" : "账单"}地址
 					</Label>
 				</div>
 			)}

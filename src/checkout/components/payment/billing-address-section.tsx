@@ -161,7 +161,7 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 
 	return (
 		<section className="space-y-4">
-			<h2 className="text-lg font-semibold">Billing address</h2>
+			<h2 className="text-lg font-semibold">账单地址</h2>
 
 			{/* Only show "Same as shipping" if there's a shipping address */}
 			{hasShippingAddress && (
@@ -172,7 +172,7 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 						onCheckedChange={(checked) => handleSameAsShippingChange(checked === true)}
 					/>
 					<Label htmlFor="same-billing" className="cursor-pointer text-sm">
-						Same as shipping address
+						与收货地址相同
 					</Label>
 				</div>
 			)}
@@ -196,19 +196,19 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 										onClick={() => setShowNewAddressForm(false)}
 										className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground underline underline-offset-2 hover:no-underline"
 									>
-										<ChevronLeft className="h-4 w-4" /> Back to saved addresses
+										<ChevronLeft className="h-4 w-4" /> 返回已保存地址
 									</button>
 
 									{/* Country selector */}
 									<div className="space-y-2">
 										<Label htmlFor="billing-country" className="text-sm font-medium">
-											Country/Region
+											国家/地区
 										</Label>
 										<FormSelect
 											id="billing-country"
 											value={countryCode}
 											onChange={handleCountryChange}
-											placeholder="Select country"
+											placeholder="选择国家"
 											autoComplete="country"
 											options={availableShippingCountries.map((code) => ({
 												value: code,
@@ -237,10 +237,10 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 										selectedAddressId={selectedAddressId}
 										onSelectAddress={handleSelectSavedAddress}
 										defaultAddressId={defaultBillingAddressId}
-										emptyMessage="No saved addresses available."
+										emptyMessage="没有可用的已保存地址。"
 										name="billingAddress"
 										addressType="BILLING"
-										sheetTitle="Select billing address"
+										sheetTitle="选择账单地址"
 										onAddNew={() => {
 											setShowNewAddressForm(true);
 											setSelectedAddressId(null);
@@ -269,13 +269,13 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 							{/* Country selector */}
 							<div className="space-y-2">
 								<Label htmlFor="billing-country" className="text-sm font-medium">
-									Country/Region
+									国家/地区
 								</Label>
 								<FormSelect
 									id="billing-country"
 									value={countryCode}
 									onChange={handleCountryChange}
-									placeholder="Select country"
+									placeholder="选择国家"
 									autoComplete="country"
 									options={availableShippingCountries.map((code) => ({
 										value: code,
@@ -313,7 +313,7 @@ export const useBillingAddressValidation = (countryCode: CountryCode) => {
 		const errors: Record<string, string> = {};
 		orderedAddressFields.forEach((field) => {
 			if (isRequiredField(field) && !formData[field]) {
-				errors[field] = `${getFieldLabel(field)} is required`;
+				errors[field] = `${getFieldLabel(field)} 是必填项`;
 			}
 		});
 		return errors;

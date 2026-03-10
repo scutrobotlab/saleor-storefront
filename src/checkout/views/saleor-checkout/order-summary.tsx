@@ -57,7 +57,7 @@ function extractCheckoutData(checkout: CheckoutFragment): OrderSummaryData {
 		return {
 			id: line.id,
 			quantity: line.quantity,
-			name: line.variant?.product?.name || "Product",
+			name: line.variant?.product?.name || "产品",
 			attributes,
 			imageUrl: image?.url,
 			imageAlt: image?.alt,
@@ -87,7 +87,7 @@ function extractOrderData(order: OrderFragment): OrderSummaryData {
 		return {
 			id: line.id,
 			quantity: line.quantity,
-			name: line.productName || "Product",
+			name: line.productName || "产品",
 			attributes,
 			imageUrl: line.thumbnail?.url,
 			imageAlt: line.thumbnail?.alt,
@@ -198,10 +198,8 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 					</div>
 					{/* Text */}
 					<div className="flex flex-col items-start">
-						<span className="text-sm font-medium">{isExpanded ? "Hide" : "Show"} order summary</span>
-						<span className="text-xs text-muted-foreground">
-							{itemCount} {itemCount === 1 ? "item" : "items"}
-						</span>
+						<span className="text-sm font-medium">{isExpanded ? "隐藏" : "显示"}订单摘要</span>
+						<span className="text-xs text-muted-foreground">{itemCount} 件商品</span>
 					</div>
 				</div>
 				<div className="flex items-center gap-2">
@@ -217,10 +215,8 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 
 			{/* Desktop Header - Only visible on desktop */}
 			<header className="bg-secondary/30 hidden items-center gap-2 px-5 py-4 md:flex">
-				<h2 className="text-base font-semibold">Order Summary</h2>
-				<span className="text-sm text-muted-foreground">
-					({itemCount} {itemCount === 1 ? "item" : "items"})
-				</span>
+				<h2 className="text-base font-semibold">订单摘要</h2>
+				<span className="text-sm text-muted-foreground">（共 {itemCount} 件商品）</span>
 			</header>
 
 			{/* Collapsible Content - animated on mobile, always visible on desktop */}
@@ -288,7 +284,7 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 								<div className="relative flex-1">
 									<Tag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 									<Input
-										placeholder="Discount code"
+										placeholder="折扣码"
 										value={promoCode}
 										onChange={(e) => setPromoCode(e.target.value)}
 										className="h-10 bg-white pl-10 text-sm"
@@ -301,11 +297,11 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 									disabled={!promoCode || promoApplied}
 									className="h-10 bg-white px-4 text-sm"
 								>
-									{promoApplied ? "Applied" : "Apply"}
+									{promoApplied ? "已应用" : "应用"}
 								</Button>
 							</form>
 							{promoApplied && (
-								<p className="mt-2 text-sm font-medium text-green-600">SALEOR10 - 10% discount applied</p>
+								<p className="mt-2 text-sm font-medium text-green-600">SALEOR10 - 已应用10%折扣</p>
 							)}
 						</section>
 					)}
@@ -314,24 +310,24 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 					<section className="border-t border-border px-5 py-4">
 						<dl className="space-y-2 text-sm tabular-nums">
 							<div className="flex justify-between">
-								<dt className="text-muted-foreground">Subtotal</dt>
+								<dt className="text-muted-foreground">小计</dt>
 								<dd>{formatMoney(subtotal)}</dd>
 							</div>
 							<div className="flex justify-between">
-								<dt className="text-muted-foreground">Shipping</dt>
+								<dt className="text-muted-foreground">运费</dt>
 								<dd className={cn(shipping === 0 && "text-green-600")}>
-									{shipping === 0 ? "Free" : formatMoney(shipping)}
+									{shipping === 0 ? "免费" : formatMoney(shipping)}
 								</dd>
 							</div>
 							{tax > 0 && (
 								<div className="flex justify-between">
-									<dt className="text-muted-foreground">Tax (VAT)</dt>
+									<dt className="text-muted-foreground">税费 (增值税)</dt>
 									<dd>{formatMoney(tax)}</dd>
 								</div>
 							)}
 							{discount > 0 && (
 								<div className="flex justify-between text-green-600">
-									<dt>Discount</dt>
+									<dt>折扣</dt>
 									<dd>-{formatMoney(discount)}</dd>
 								</div>
 							)}
@@ -340,8 +336,8 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 						{/* Total */}
 						<div className="border-border/50 mt-4 flex items-baseline justify-between border-t pt-4">
 							<div className="flex flex-col">
-								<span className="text-base font-semibold">Total</span>
-								{tax > 0 && <span className="text-xs text-muted-foreground">Including VAT</span>}
+								<span className="text-base font-semibold">总计</span>
+								{tax > 0 && <span className="text-xs text-muted-foreground">含增值税</span>}
 							</div>
 							<data value={total} className="text-xl font-semibold tabular-nums">
 								{formatMoney(total)}
@@ -354,25 +350,25 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 						<div className="flex flex-col items-center rounded-lg bg-secondary p-2.5 text-center">
 							<ShieldCheck className="mb-1 h-4 w-4 text-muted-foreground" />
 							<span className="text-[10px] leading-tight text-muted-foreground">
-								Secure
+								安全
 								<br />
-								checkout
+								结算
 							</span>
 						</div>
 						<div className="flex flex-col items-center rounded-lg bg-secondary p-2.5 text-center">
 							<RotateCcw className="mb-1 h-4 w-4 text-muted-foreground" />
 							<span className="text-[10px] leading-tight text-muted-foreground">
-								30-day
+								30天
 								<br />
-								returns
+								退货
 							</span>
 						</div>
 						<div className="flex flex-col items-center rounded-lg bg-secondary p-2.5 text-center">
 							<Truck className="mb-1 h-4 w-4 text-muted-foreground" />
 							<span className="text-[10px] leading-tight text-muted-foreground">
-								Free
+								免费
 								<br />
-								shipping
+								配送
 							</span>
 						</div>
 					</footer>

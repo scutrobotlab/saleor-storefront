@@ -16,13 +16,13 @@ export default function RootPage() {
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background p-8">
 			<div className="max-w-md text-center">
-				<h1 className="mb-4 text-2xl font-semibold text-foreground">Channel Not Configured</h1>
+				<h1 className="mb-4 text-2xl font-semibold text-foreground">渠道未配置</h1>
 				<p className="mb-6 text-muted-foreground">
-					Set the <code className="rounded bg-muted px-2 py-1">NEXT_PUBLIC_DEFAULT_CHANNEL</code> environment
-					variable to your Saleor channel slug.
+					请将 <code className="rounded bg-muted px-2 py-1">NEXT_PUBLIC_DEFAULT_CHANNEL</code>{" "}
+					环境变量设置为您的 Saleor 渠道标识符。
 				</p>
 				<div className="rounded-lg bg-muted p-4 text-left">
-					<p className="mb-2 text-sm font-medium text-foreground">In your .env.local file:</p>
+					<p className="mb-2 text-sm font-medium text-foreground">在您的 .env.local 文件中：</p>
 					<code className="text-sm text-muted-foreground">NEXT_PUBLIC_DEFAULT_CHANNEL=default-channel</code>
 				</div>
 			</div>

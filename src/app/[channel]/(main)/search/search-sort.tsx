@@ -12,11 +12,11 @@ import { Button } from "@/ui/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
 const SORT_OPTIONS = [
-	{ value: "relevance", label: "Relevance" },
-	{ value: "price-asc", label: "Price: Low to High" },
-	{ value: "price-desc", label: "Price: High to Low" },
-	{ value: "name", label: "Name" },
-	{ value: "newest", label: "Newest" },
+	{ value: "relevance", label: "相关性" },
+	{ value: "price-asc", label: "价格：从低到高" },
+	{ value: "price-desc", label: "价格：从高到低" },
+	{ value: "name", label: "名称" },
+	{ value: "newest", label: "最新" },
 ] as const;
 
 export function SearchSort() {
@@ -25,7 +25,7 @@ export function SearchSort() {
 	const searchParams = useSearchParams();
 
 	const currentSort = searchParams.get("sort") || "relevance";
-	const currentLabel = SORT_OPTIONS.find((o) => o.value === currentSort)?.label || "Relevance";
+	const currentLabel = SORT_OPTIONS.find((o) => o.value === currentSort)?.label || "相关性";
 
 	const handleSortChange = (value: string) => {
 		const params = new URLSearchParams(searchParams.toString());
@@ -46,7 +46,7 @@ export function SearchSort() {
 				<Button variant="outline-solid" size="sm" className="gap-2">
 					<ArrowUpDown className="h-4 w-4" />
 					<span className="hidden sm:inline">{currentLabel}</span>
-					<span className="sm:hidden">Sort</span>
+					<span className="sm:hidden">排序</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-48">

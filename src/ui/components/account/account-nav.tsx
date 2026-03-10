@@ -15,10 +15,10 @@ const navItems: ReadonlyArray<{
 	icon: typeof LayoutGrid;
 	exact?: boolean;
 }> = [
-	{ href: accountRoutes.overview, label: "Overview", icon: LayoutGrid, exact: true },
-	{ href: accountRoutes.orders, label: "Orders", icon: Receipt },
-	{ href: accountRoutes.addresses, label: "Addresses", icon: MapPin },
-	{ href: accountRoutes.settings, label: "Settings", icon: Settings },
+	{ href: accountRoutes.overview, label: "概览", icon: LayoutGrid, exact: true },
+	{ href: accountRoutes.orders, label: "订单", icon: Receipt },
+	{ href: accountRoutes.addresses, label: "地址", icon: MapPin },
+	{ href: accountRoutes.settings, label: "设置", icon: Settings },
 ];
 
 export function AccountNav() {
@@ -46,7 +46,7 @@ export function AccountNav() {
 				className="mb-8 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
 			>
 				<span className="text-base leading-none">&lsaquo;</span>
-				Back to store
+				返回商店
 			</LinkWithChannel>
 
 			<div className="mb-8 hidden md:block">
@@ -69,7 +69,7 @@ export function AccountNav() {
 				<p className="mt-0.5 text-sm text-muted-foreground">{user.email}</p>
 			</div>
 
-			<nav aria-label="Account" className="flex gap-1 overflow-x-auto md:flex-col md:gap-0.5">
+			<nav aria-label="账户" className="flex gap-1 overflow-x-auto md:flex-col md:gap-0.5">
 				{navItems.map(({ href, label, icon: Icon, exact }) => {
 					const active = isActive(href, exact);
 					return (
@@ -98,7 +98,7 @@ export function AccountNav() {
 						className="flex items-center gap-3 px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
 					>
 						<ArrowLeft className="h-[18px] w-[18px]" strokeWidth={1.75} />
-						Sign out
+						退出登录
 					</button>
 				</form>
 			</div>

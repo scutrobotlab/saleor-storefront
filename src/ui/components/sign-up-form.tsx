@@ -30,17 +30,17 @@ export function SignUpForm() {
 
 		// Validation
 		if (!email || !validateEmail(email)) {
-			setError("Please enter a valid email address");
+			setError("请输入有效的电子邮件地址");
 			return;
 		}
 
 		if (password.length < 8) {
-			setError("Password must be at least 8 characters");
+			setError("密码至少需要8个字符");
 			return;
 		}
 
 		if (password !== confirmPassword) {
-			setError("Passwords do not match");
+			setError("密码不匹配");
 			return;
 		}
 
@@ -69,9 +69,9 @@ export function SignUpForm() {
 			if (data.errors?.length) {
 				const err = data.errors[0];
 				if (err.code === "UNIQUE") {
-					setError("An account with this email already exists. Please sign in instead.");
+					setError("此电子邮件已存在账户。请直接登录。");
 				} else {
-					setError(err.message || "Failed to create account");
+					setError(err.message || "创建账户失败");
 				}
 				return;
 			}
@@ -79,7 +79,7 @@ export function SignUpForm() {
 			// Success - show confirmation message
 			setSuccess(true);
 		} catch {
-			setError("An error occurred. Please try again.");
+			setError("发生错误，请重试。");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -101,13 +101,13 @@ export function SignUpForm() {
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
 							</svg>
 						</div>
-						<h2 className="text-xl font-semibold">Account Created!</h2>
-						<p className="mt-2 text-muted-foreground">Please check your email to verify your account.</p>
+						<h2 className="text-xl font-semibold">账户已创建！</h2>
+						<p className="mt-2 text-muted-foreground">请检查您的电子邮件以验证您的账户。</p>
 						<Link
 							href={`/${params.channel}/login`}
 							className="mt-6 inline-block text-sm font-medium text-foreground underline underline-offset-2 hover:no-underline"
 						>
-							Go to Sign In
+							前往登录
 						</Link>
 					</div>
 				</div>
@@ -119,14 +119,14 @@ export function SignUpForm() {
 		<div className="mx-auto mt-16 w-full max-w-md">
 			<div className="rounded-lg border border-border bg-card p-8 shadow-sm">
 				<div className="mb-6 text-center">
-					<h1 className="text-2xl font-semibold">Create an Account</h1>
+					<h1 className="text-2xl font-semibold">创建账户</h1>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Already have an account?{" "}
+						已有账户？{" "}
 						<Link
 							href={`/${params.channel}/login`}
 							className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
 						>
-							Sign in
+							登录
 						</Link>
 					</p>
 				</div>
@@ -142,14 +142,14 @@ export function SignUpForm() {
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-1.5">
 							<Label htmlFor="firstName" className="text-sm font-medium">
-								First name
+								名
 							</Label>
 							<div className="relative">
 								<User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 								<Input
 									id="firstName"
 									type="text"
-									placeholder="First name"
+									placeholder="名"
 									autoComplete="given-name"
 									value={firstName}
 									onChange={(e) => setFirstName(e.target.value)}
@@ -159,12 +159,12 @@ export function SignUpForm() {
 						</div>
 						<div className="space-y-1.5">
 							<Label htmlFor="lastName" className="text-sm font-medium">
-								Last name
+								姓
 							</Label>
 							<Input
 								id="lastName"
 								type="text"
-								placeholder="Last name"
+								placeholder="姓"
 								autoComplete="family-name"
 								value={lastName}
 								onChange={(e) => setLastName(e.target.value)}
@@ -176,7 +176,7 @@ export function SignUpForm() {
 					{/* Email */}
 					<div className="space-y-1.5">
 						<Label htmlFor="email" className="text-sm font-medium">
-							Email address
+							电子邮件地址
 						</Label>
 						<div className="relative">
 							<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -197,14 +197,14 @@ export function SignUpForm() {
 					{/* Password */}
 					<div className="space-y-1.5">
 						<Label htmlFor="password" className="text-sm font-medium">
-							Password
+							密码
 						</Label>
 						<div className="relative">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
 								id="password"
 								type={showPassword ? "text" : "password"}
-								placeholder="Minimum 8 characters…"
+								placeholder="最少8个字符..."
 								autoComplete="new-password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -215,7 +215,7 @@ export function SignUpForm() {
 							<button
 								type="button"
 								onClick={() => setShowPassword(!showPassword)}
-								aria-label={showPassword ? "Hide password" : "Show password"}
+								aria-label={showPassword ? "隐藏密码" : "显示密码"}
 								className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 							>
 								{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -226,14 +226,14 @@ export function SignUpForm() {
 					{/* Confirm Password */}
 					<div className="space-y-1.5">
 						<Label htmlFor="confirmPassword" className="text-sm font-medium">
-							Confirm password
+							确认密码
 						</Label>
 						<div className="relative">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
 								id="confirmPassword"
 								type={showPassword ? "text" : "password"}
-								placeholder="Re-enter your password"
+								placeholder="请重新输入密码"
 								autoComplete="new-password"
 								value={confirmPassword}
 								onChange={(e) => setConfirmPassword(e.target.value)}
@@ -245,22 +245,22 @@ export function SignUpForm() {
 							/>
 						</div>
 						{confirmPassword && password !== confirmPassword && (
-							<p className="text-sm text-destructive">Passwords do not match</p>
+							<p className="text-sm text-destructive">密码不匹配</p>
 						)}
 					</div>
 
 					<Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base font-semibold">
-						{isSubmitting ? "Creating account…" : "Create Account"}
+						{isSubmitting ? "正在创建账户..." : "创建账户"}
 					</Button>
 
 					<p className="text-center text-xs text-muted-foreground">
-						By creating an account, you agree to our{" "}
+						通过创建账户，即表示您同意我们的{" "}
 						<Link href="#" className="underline hover:no-underline">
-							Terms of Service
+							服务条款
 						</Link>{" "}
-						and{" "}
+						和{" "}
 						<Link href="#" className="underline hover:no-underline">
-							Privacy Policy
+							隐私政策
 						</Link>
 					</p>
 				</form>

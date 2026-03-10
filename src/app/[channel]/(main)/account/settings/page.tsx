@@ -8,7 +8,7 @@ export default async function AccountSettingsPage() {
 	const user = await getCurrentUser();
 	if (!user) return null;
 
-	const memberSince = new Date(user.dateJoined).toLocaleDateString("en-US", {
+	const memberSince = new Date(user.dateJoined).toLocaleDateString("zh-Hans", {
 		month: "long",
 		year: "numeric",
 	});
@@ -16,15 +16,15 @@ export default async function AccountSettingsPage() {
 	return (
 		<div className="space-y-8">
 			<div>
-				<h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-				<p className="mt-1 text-sm text-muted-foreground">Manage your account settings</p>
+				<h1 className="text-2xl font-semibold tracking-tight">设置</h1>
+				<p className="mt-1 text-sm text-muted-foreground">管理您的账户设置</p>
 			</div>
 
 			<div className="divide-y rounded-lg border">
 				<div className="p-4 sm:p-6">
 					<div className="flex items-center justify-between">
 						<div>
-							<p className="text-sm text-muted-foreground">Email</p>
+							<p className="text-sm text-muted-foreground">邮箱</p>
 							<div className="flex items-center gap-2">
 								<Mail className="h-4 w-4 text-muted-foreground" />
 								<p className="font-medium">{user.email}</p>
@@ -44,7 +44,7 @@ export default async function AccountSettingsPage() {
 				<div className="p-4 sm:p-6">
 					<div className="flex items-center gap-2 text-sm text-muted-foreground">
 						<Calendar className="h-4 w-4" />
-						<span>Member since {memberSince}</span>
+						<span>会员时间：{memberSince}</span>
 					</div>
 				</div>
 			</div>

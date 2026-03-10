@@ -144,8 +144,8 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 				<SheetHeader className="justify-between border-b border-border px-6 py-4">
 					<div className="flex items-center gap-3">
 						<ShoppingBag className="h-5 w-5" />
-						<SheetTitle>Your Bag</SheetTitle>
-						<span className="text-sm text-muted-foreground">({itemCount} items)</span>
+						<SheetTitle>您的购物车</SheetTitle>
+						<span className="text-sm text-muted-foreground">（共 {itemCount} 件商品）</span>
 					</div>
 					<SheetCloseButton className="static" />
 				</SheetHeader>
@@ -157,10 +157,10 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 							<Truck className={cn("h-4 w-4", amountToFreeShipping <= 0 && "text-success")} />
 							{amountToFreeShipping > 0 ? (
 								<span>
-									Add <strong>{formatMoney(amountToFreeShipping, currency)}</strong> more for free shipping
+									再购 <strong>{formatMoney(amountToFreeShipping, currency)}</strong> 即可免运费
 								</span>
 							) : (
-								<span className="font-medium text-success">You qualify for free shipping!</span>
+								<span className="font-medium text-success">您已符合免运条件！</span>
 							)}
 						</div>
 						<div className="h-1.5 overflow-hidden rounded-full bg-border">
@@ -182,16 +182,14 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 							<div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary">
 								<ShoppingBag className="h-8 w-8 text-muted-foreground" />
 							</div>
-							<h3 className="mb-2 text-lg font-medium">Your bag is empty</h3>
-							<p className="mb-6 text-sm text-muted-foreground">
-								Looks like you haven&apos;t added anything to your bag yet.
-							</p>
+							<h3 className="mb-2 text-lg font-medium">您的购物车为空</h3>
+							<p className="mb-6 text-sm text-muted-foreground">看起来您还没有添加任何商品到购物车。</p>
 							<Link
 								href={`/${channel}/products`}
 								onClick={closeCart}
 								className="hover:bg-primary/90 inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors"
 							>
-								Start Shopping
+								开始购物
 							</Link>
 						</div>
 					) : (
@@ -262,7 +260,7 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 														disabled={isPending}
 													>
 														<Trash2 className="h-4 w-4" />
-														<span className="sr-only">Remove {line.variant.product.name}</span>
+														<span className="sr-only">移除 {line.variant.product.name}</span>
 													</Button>
 												</div>
 
@@ -277,7 +275,7 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 															className="p-2 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-40"
 														>
 															<Minus className="h-3 w-3" />
-															<span className="sr-only">Decrease quantity</span>
+															<span className="sr-only">减少数量</span>
 														</button>
 														<span className="w-8 text-center text-sm font-medium">{line.quantity}</span>
 														<button
@@ -287,7 +285,7 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 															className="p-2 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-40"
 														>
 															<Plus className="h-3 w-3" />
-															<span className="sr-only">Increase quantity</span>
+															<span className="sr-only">增加数量</span>
 														</button>
 													</div>
 
@@ -321,15 +319,15 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 						{/* Order Summary */}
 						<div className="space-y-2 px-6 py-4">
 							<div className="flex items-center justify-between text-sm">
-								<span className="text-muted-foreground">Subtotal</span>
+								<span className="text-muted-foreground">小计</span>
 								<span>{formatMoney(subtotal, currency)}</span>
 							</div>
 							<div className="flex items-center justify-between text-sm">
-								<span className="text-muted-foreground">Shipping</span>
-								<span>{subtotal >= freeShippingThreshold ? "Free" : "Calculated at checkout"}</span>
+								<span className="text-muted-foreground">运费</span>
+								<span>{subtotal >= freeShippingThreshold ? "免费" : "结算时计算"}</span>
 							</div>
 							<div className="flex items-center justify-between border-t border-border pt-2 text-base font-semibold">
-								<span>Total</span>
+								<span>总计</span>
 								<span>{formatMoney(subtotal, currency)}</span>
 							</div>
 						</div>
@@ -341,7 +339,7 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 								onClick={closeCart}
 								className="hover:bg-primary/90 group inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary text-base font-medium text-primary-foreground transition-colors"
 							>
-								<span>Checkout</span>
+								<span>去结算</span>
 								<ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
 							</Link>
 							<Link
@@ -349,19 +347,18 @@ export function CartDrawer({ checkoutId, lines, totalPrice, channel }: CartDrawe
 								onClick={closeCart}
 								className="inline-flex h-12 w-full items-center justify-center rounded-md border border-border bg-transparent text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 							>
-								Continue Shopping
+								继续购物
 							</Link>
 						</div>
 
 						{/* Trust Signals */}
 						<div className="flex items-center justify-center gap-6 border-t border-border px-6 pb-4 pt-4 text-xs text-muted-foreground">
 							<span className="flex items-center gap-1.5">
-								<Truck className="h-4 w-4" />
-								Free delivery over {formatMoney(freeShippingThreshold, currency)}
+								<Truck className="h-4 w-4" />满 {formatMoney(freeShippingThreshold, currency)} 免费配送
 							</span>
 							<span className="flex items-center gap-1.5">
 								<RotateCcw className="h-4 w-4" />
-								30-day returns
+								30天退货
 							</span>
 						</div>
 					</div>

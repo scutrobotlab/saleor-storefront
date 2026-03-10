@@ -23,10 +23,10 @@ function AddToCartButton({
 	const { pending } = useFormStatus();
 
 	const getButtonText = () => {
-		if (pending) return "Adding...";
-		if (!disabled) return "Add to bag";
-		if (disabledReason === "out-of-stock") return "Out of stock";
-		return "Select options";
+		if (pending) return "正在添加...";
+		if (!disabled) return "添加到购物袋";
+		if (disabledReason === "out-of-stock") return "缺货";
+		return "选择选项";
 	};
 
 	// Simple, clean - no success state needed
@@ -75,14 +75,14 @@ export function AddToCart({
 					<svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
 						<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
 					</svg>
-					Secure checkout
+					安全结账
 				</span>
 				<span className="flex items-center gap-1.5">
 					<svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
 						<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
 						<path d="M9 22V12h6v10" />
 					</svg>
-					Free delivery over €100
+					满 €100 免运费
 				</span>
 			</div>
 		</div>

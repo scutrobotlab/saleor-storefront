@@ -12,7 +12,7 @@ export function AccountProvider({ user, children }: { user: AccountUser; childre
 export function useAccountUser(): AccountUser {
 	const user = use(AccountContext);
 	if (!user) {
-		throw new Error("useAccountUser must be used within an AccountProvider");
+		throw new Error("useAccountUser 必须在 AccountProvider 内部使用");
 	}
 	return user;
 }

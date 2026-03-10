@@ -8,9 +8,9 @@ export const DraftModeNotification = async () => {
 
 	return (
 		<div className="fixed bottom-0 right-0 z-50 bg-red-100 px-8 py-2 text-red-700">
-			You&apos;re in draft mode. Requests are not cached.{" "}
+			您处于草稿模式。请求未被缓存。{" "}
 			<Link className="underline" href="/api/draft/disable">
-				Disable.
+				禁用。
 			</Link>
 		</div>
 	);

@@ -27,9 +27,7 @@ export function CartButton({ itemCount }: CartButtonProps) {
 					{itemCount > 9 ? "9+" : itemCount}
 				</span>
 			)}
-			<span className="sr-only">
-				{itemCount} item{itemCount !== 1 ? "s" : ""} in cart, view bag
-			</span>
+			<span className="sr-only">购物车中有 {itemCount} 件商品，查看购物袋</span>
 		</button>
 	);
 }

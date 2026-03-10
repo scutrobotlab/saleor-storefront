@@ -20,7 +20,7 @@ export interface ProductCardData {
 	imageAlt?: string;
 	hoverImage?: string | null;
 	href: string;
-	badge?: "Sale" | "New" | null;
+	badge?: "Sale" | "New" | null; // Keep original values for logic, translate when displayed
 	colors?: { name: string; hex: string }[];
 	/** Available sizes for filtering (e.g., ["S", "M", "L"]) */
 	sizes?: string[];
@@ -49,10 +49,22 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 	};
 
 	const formatPrice = (amount: number, currency: string) => {
-		return new Intl.NumberFormat("en", {
+		return new Intl.NumberFormat("zh-Hans", {
+			// Changed locale to zh-Hans for currency formatting
 			style: "currency",
 			currency: currency,
 		}).format(amount);
+	};
+
+	const getTranslatedBadgeText = (badge: ProductCardData["badge"]) => {
+		switch (badge) {
+			case "Sale":
+				return "促销";
+			case "New":
+				return "新品";
+			default:
+				return badge;
+		}
 	};
 
 	return (
@@ -77,7 +89,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 					{product.hoverImage && (
 						<Image
 							src={product.hoverImage}
-							alt={`${product.name} - alternate view`}
+							alt={`${product.name} - 另一个视图`}
 							fill
 							sizes="(max-width: 1024px) 50vw, 33vw"
 							className="object-cover opacity-0 transition-all duration-500 ease-out md:group-hover:scale-105 md:group-hover:opacity-100"
@@ -90,7 +102,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 							variant={product.badge === "Sale" ? "destructive" : "default"}
 							className="absolute left-3 top-3"
 						>
-							{product.badge}
+							{getTranslatedBadgeText(product.badge)}
 						</Badge>
 					)}
 
@@ -99,7 +111,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 						<div className="absolute bottom-0 left-0 right-0 hidden translate-y-2 p-3 opacity-0 transition-all duration-300 md:block md:group-hover:translate-y-0 md:group-hover:opacity-100">
 							<Button className="w-full" size="sm" onClick={handleQuickAdd} type="button">
 								<Plus className="mr-1.5 h-4 w-4" />
-								Quick Add
+								快速添加
 							</Button>
 						</div>
 					)}

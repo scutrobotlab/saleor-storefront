@@ -55,14 +55,14 @@ export const SignInForm: FC<SignInFormProps> = ({
 			const result = await signIn({ email, password });
 			if (result.data?.tokenCreate?.errors?.length) {
 				const err = result.data.tokenCreate.errors[0];
-				setError(err.message || "Invalid email or password");
+				setError(err.message || "电子邮件或密码无效");
 			} else if (result.data?.tokenCreate?.token) {
 				onSuccess();
 			} else {
-				setError("Sign in failed. Please try again.");
+				setError("登录失败。请再试一次。");
 			}
 		} catch {
-			setError("An error occurred. Please try again.");
+			setError("发生错误。请再试一次。");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -73,12 +73,12 @@ export const SignInForm: FC<SignInFormProps> = ({
 		setSuccessMessage("");
 
 		if (!email) {
-			setError("Please enter your email address first");
+			setError("请先输入您的电子邮件地址");
 			return;
 		}
 
 		if (!validateEmail(email)) {
-			setError("Please enter a valid email address");
+			setError("请输入有效的电子邮件地址");
 			return;
 		}
 
@@ -91,22 +91,19 @@ export const SignInForm: FC<SignInFormProps> = ({
 			});
 
 			if (result.error) {
-				setError(result.error.message || "Failed to send reset link");
+				setError(result.error.message || "发送重置链接失败");
 				return;
 			}
 
 			if (result.data?.requestPasswordReset?.errors?.length) {
 				const err = result.data.requestPasswordReset.errors[0];
-				setError(err.message || "Failed to send reset link");
+				setError(err.message || "发送重置链接失败");
 			} else {
 				setPasswordResetSent(true);
-				setSuccessMessage(
-					`If an account exists for ${email}, a password reset link has been sent. ` +
-						`Note: You can only request one reset link every 15 minutes.`,
-				);
+				setSuccessMessage(`如果 ${email} 存在账户，已发送密码重置链接。注意：每15分钟只能请求一个重置链接。`);
 			}
 		} catch {
-			setError("An error occurred. Please try again.");
+			setError("发生错误。请再试一次。");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -115,15 +112,15 @@ export const SignInForm: FC<SignInFormProps> = ({
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
 			<div className="flex items-center justify-between">
-				<h2 className="text-xl font-semibold">Sign in</h2>
+				<h2 className="text-xl font-semibold">登录</h2>
 				<p className="text-sm text-muted-foreground">
-					New customer?{" "}
+					新客户？{" "}
 					<button
 						type="button"
 						onClick={onGuestCheckout}
 						className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
 					>
-						Guest checkout
+						访客结账
 					</button>
 				</p>
 			</div>
@@ -139,7 +136,7 @@ export const SignInForm: FC<SignInFormProps> = ({
 					<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						type="email"
-						placeholder="Email address"
+						placeholder="电子邮件地址"
 						value={email}
 						onChange={(e) => {
 							setEmail(e.target.value);
@@ -157,7 +154,7 @@ export const SignInForm: FC<SignInFormProps> = ({
 					<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						type={showPassword ? "text" : "password"}
-						placeholder="Password"
+						placeholder="密码"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						autoComplete="current-password"
@@ -181,10 +178,10 @@ export const SignInForm: FC<SignInFormProps> = ({
 					disabled={isSubmitting}
 					className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground hover:no-underline disabled:opacity-50"
 				>
-					{passwordResetSent ? "Resend link?" : "Forgot password?"}
+					{passwordResetSent ? "重新发送链接？" : "忘记密码？"}
 				</button>
 				<Button type="submit" disabled={isSubmitting}>
-					{isSubmitting ? "Processing..." : "Sign in"}
+					{isSubmitting ? "处理中..." : "登录"}
 				</Button>
 			</div>
 		</form>

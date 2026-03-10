@@ -4,19 +4,19 @@
 
 export const localeConfig = {
 	/** Locale for Intl APIs (number/date formatting) - BCP 47 format */
-	default: "en-US",
+	default: "zh-CN",
 
 	/** Language code for Saleor API - controls translated content */
-	graphqlLanguageCode: "EN_US" as const,
+	graphqlLanguageCode: "ZH_HANS" as const,
 
 	/** HTML lang attribute */
-	htmlLang: "en",
+	htmlLang: "zh",
 
 	/** Open Graph locale */
-	ogLocale: "en_US",
+	ogLocale: "zh_CN",
 
 	/** Available locales (for future i18n) */
-	available: ["en-US"] as const,
+	available: ["zh-CN"] as const,
 
 	/**
 	 * Fallback currency - ONLY used when API returns null (shouldn't happen).

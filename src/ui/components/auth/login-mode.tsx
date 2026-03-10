@@ -29,12 +29,12 @@ export function LoginMode() {
 		setError("");
 
 		if (!email || !EMAIL_RE.test(email)) {
-			setError("Please enter a valid email address");
+			setError("请输入有效的电子邮件地址");
 			return;
 		}
 
 		if (!password) {
-			setError("Please enter your password");
+			setError("请输入您的密码");
 			return;
 		}
 
@@ -48,11 +48,7 @@ export function LoginMode() {
 				const isInvalidCredentials =
 					err.message?.toLowerCase().includes("invalid") ||
 					err.message?.toLowerCase().includes("credentials");
-				setError(
-					isInvalidCredentials
-						? "Invalid email or password. Please try again."
-						: err.message || "Sign in failed",
-				);
+				setError(isInvalidCredentials ? "无效的电子邮件或密码。请重试。" : err.message || "登录失败");
 				return;
 			}
 
@@ -61,7 +57,7 @@ export function LoginMode() {
 				router.refresh();
 			}
 		} catch {
-			setError("An error occurred. Please try again.");
+			setError("发生错误。请重试。");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -72,7 +68,7 @@ export function LoginMode() {
 		setResetMessage("");
 
 		if (!email || !EMAIL_RE.test(email)) {
-			setError("Please enter a valid email address first");
+			setError("请先输入有效的电子邮件地址");
 			return;
 		}
 
@@ -95,16 +91,16 @@ export function LoginMode() {
 			};
 
 			if (data.errors?.length) {
-				setError(data.errors[0].message || "Failed to send reset link");
+				setError(data.errors[0].message || "发送重置链接失败");
 				return;
 			}
 
 			setResetEmailSent(true);
 			setResetMessage(
-				`If an account exists for ${email}, a password reset link has been sent. Note: You can only request one reset link every 15 minutes.`,
+				`如果 ${email} 存在账户，则已发送密码重置链接。请注意：您每 15 分钟只能请求一个重置链接。`,
 			);
 		} catch {
-			setError("An error occurred. Please try again.");
+			setError("发生错误。请重试。");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -114,14 +110,14 @@ export function LoginMode() {
 		<div className="mx-auto my-16 w-full max-w-md">
 			<div className="rounded-lg border border-border bg-card p-8 shadow-sm">
 				<div className="mb-6 text-center">
-					<h1 className="text-2xl font-semibold">Welcome Back</h1>
+					<h1 className="text-2xl font-semibold">欢迎回来</h1>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Don&apos;t have an account?{" "}
+						还没有账户？{" "}
 						<Link
 							href={`/${params.channel}/signup`}
 							className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
 						>
-							Sign up
+							注册
 						</Link>
 					</p>
 				</div>
@@ -141,7 +137,7 @@ export function LoginMode() {
 
 					<div className="space-y-1.5">
 						<Label htmlFor="email" className="text-sm font-medium">
-							Email address
+							电子邮件地址
 						</Label>
 						<div className="relative">
 							<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -164,14 +160,14 @@ export function LoginMode() {
 
 					<div className="space-y-1.5">
 						<Label htmlFor="password" className="text-sm font-medium">
-							Password
+							密码
 						</Label>
 						<div className="relative">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 							<Input
 								id="password"
 								type={showPassword ? "text" : "password"}
-								placeholder="Enter your password"
+								placeholder="输入您的密码"
 								autoComplete="current-password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -181,7 +177,7 @@ export function LoginMode() {
 							<button
 								type="button"
 								onClick={() => setShowPassword(!showPassword)}
-								aria-label={showPassword ? "Hide password" : "Show password"}
+								aria-label={showPassword ? "隐藏密码" : "显示密码"}
 								className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 							>
 								{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -196,12 +192,12 @@ export function LoginMode() {
 							disabled={isSubmitting}
 							className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground hover:no-underline disabled:opacity-50"
 						>
-							{resetEmailSent ? "Resend link?" : "Forgot password?"}
+							{resetEmailSent ? "重新发送链接？" : "忘记密码？"}
 						</button>
 					</div>
 
 					<Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base font-semibold">
-						{isSubmitting ? "Signing in…" : "Sign In"}
+						{isSubmitting ? "登录中…" : "登录"}
 					</Button>
 				</form>
 			</div>

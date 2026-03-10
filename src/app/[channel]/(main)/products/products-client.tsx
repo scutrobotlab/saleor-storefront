@@ -80,12 +80,12 @@ export function ProductsPageClient({ products, pageInfo, resolvedCategories = []
 						<ProductGrid products={filteredProducts} />
 					) : (
 						<div className="py-12 text-center">
-							<p className="text-lg text-muted-foreground">No products match your filters.</p>
+							<p className="text-lg text-muted-foreground">没有商品符合您的筛选条件。</p>
 							<button
 								onClick={handleClearFilters}
 								className="mt-4 text-sm font-medium text-foreground underline underline-offset-4"
 							>
-								Clear all filters
+								清除所有筛选条件
 							</button>
 						</div>
 					)}

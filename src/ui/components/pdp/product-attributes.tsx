@@ -34,8 +34,17 @@ const attributeIcons: Record<string, ReactNode> = {
 	"Key Features": <Sparkles className="h-4 w-4" />,
 };
 
+// Map attribute names to their Chinese display names
+const attributeDisplayNames: Record<string, string> = {
+	Material: "材质",
+	"Made with Recycled Fibers": "再生纤维制成",
+	Waterproof: "防水",
+	Fit: "版型",
+	"Key Features": "主要特点",
+};
+
 function formatValue(value: string | boolean | string[]): ReactNode {
-	if (typeof value === "boolean") return value ? "Yes" : "No";
+	if (typeof value === "boolean") return value ? "是" : "否";
 	if (Array.isArray(value)) {
 		return (
 			<div className="flex flex-wrap justify-end gap-1">
@@ -62,9 +71,7 @@ export function ProductAttributes({
 		<Accordion type="multiple" defaultValue={["description"]} className="w-full">
 			{descriptionHtml && descriptionHtml.length > 0 && (
 				<AccordionItemWithContext value="description" className="border-border">
-					<AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-						Description
-					</AccordionTrigger>
+					<AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">描述</AccordionTrigger>
 					<AccordionContent>
 						<div className="prose prose-sm max-w-none text-muted-foreground prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-foreground prose-strong:text-foreground">
 							{descriptionHtml.map((html) => (
@@ -78,7 +85,7 @@ export function ProductAttributes({
 			{displayAttributes.length > 0 && (
 				<AccordionItemWithContext value="details" className="border-border">
 					<AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-						Product Details
+						产品详情
 					</AccordionTrigger>
 					<AccordionContent>
 						<div className="grid gap-3">
@@ -86,7 +93,7 @@ export function ProductAttributes({
 								<div key={attr.name} className="flex items-start justify-between gap-4 text-sm">
 									<span className="flex items-center gap-2 text-muted-foreground">
 										{attributeIcons[attr.name]}
-										{attr.name}
+										{attributeDisplayNames[attr.name] || attr.name}
 									</span>
 									<span className="text-right font-medium">{formatValue(attr.value)}</span>
 								</div>
@@ -99,7 +106,7 @@ export function ProductAttributes({
 			{careInstructions && (
 				<AccordionItemWithContext value="care" className="border-border">
 					<AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-						Care Instructions
+						洗涤说明
 					</AccordionTrigger>
 					<AccordionContent className="leading-relaxed text-muted-foreground">
 						{careInstructions}
@@ -109,11 +116,11 @@ export function ProductAttributes({
 
 			<AccordionItemWithContext value="shipping" className="border-border">
 				<AccordionTrigger className="py-4 text-sm font-medium hover:no-underline">
-					Shipping & Returns
+					配送与退货
 				</AccordionTrigger>
 				<AccordionContent className="leading-relaxed text-muted-foreground">
-					<p className="mb-2">Free shipping on orders over €100. Standard delivery 3-5 business days.</p>
-					<p>Free returns within 30 days of purchase. Items must be unworn with tags attached.</p>
+					<p className="mb-2">订单满100欧元免运费。标准配送时间为3-5个工作日。</p>
+					<p>购买后30天内免费退货。商品必须未经穿着并保留吊牌。</p>
 				</AccordionContent>
 			</AccordionItemWithContext>
 		</Accordion>

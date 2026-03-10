@@ -29,7 +29,7 @@ export function ExpressCheckout({ onApplePay, onGooglePay, className }: ExpressC
 					<span className="w-full border-t border-border" />
 				</div>
 				<div className="relative flex justify-center text-xs uppercase">
-					<span className="bg-card px-4 font-medium text-muted-foreground">Express checkout</span>
+					<span className="bg-card px-4 font-medium text-muted-foreground">快捷支付</span>
 				</div>
 			</div>
 
@@ -40,7 +40,7 @@ export function ExpressCheckout({ onApplePay, onGooglePay, className }: ExpressC
 					variant="outline-solid"
 					onClick={onApplePay}
 					className="h-12 border-black bg-black text-white hover:bg-black/90 focus-visible:ring-offset-0"
-					aria-label="Pay with Apple Pay"
+					aria-label="使用 Apple Pay 支付"
 				>
 					<ApplePayIcon className="h-5 w-auto" />
 				</Button>
@@ -50,7 +50,7 @@ export function ExpressCheckout({ onApplePay, onGooglePay, className }: ExpressC
 					variant="outline-solid"
 					onClick={onGooglePay}
 					className="h-12 border border-neutral-300 bg-white hover:bg-neutral-50"
-					aria-label="Pay with Google Pay"
+					aria-label="使用 Google Pay 支付"
 				>
 					<GooglePayIcon className="h-5 w-auto" />
 				</Button>
@@ -62,7 +62,7 @@ export function ExpressCheckout({ onApplePay, onGooglePay, className }: ExpressC
 					<span className="w-full border-t border-border" />
 				</div>
 				<div className="relative flex justify-center text-xs uppercase">
-					<span className="bg-card px-4 font-medium text-muted-foreground">Or continue below</span>
+					<span className="bg-card px-4 font-medium text-muted-foreground">或继续下方流程</span>
 				</div>
 			</div>
 		</div>

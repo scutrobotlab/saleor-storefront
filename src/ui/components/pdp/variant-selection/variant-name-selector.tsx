@@ -45,7 +45,7 @@ export function VariantNameSelector({
 	variants,
 	selectedVariantId,
 	onSelect,
-	label = "Variant",
+	label = "变体",
 	isPending,
 }: VariantNameSelectorProps) {
 	// Check if prices differ between variants (show price if so)
@@ -86,9 +86,9 @@ export function VariantNameSelector({
 					// Build accessible label
 					const accessibleParts = [
 						variant.name,
-						isOutOfStock && "out of stock",
+						isOutOfStock && "缺货",
 						showPrices && price && formatMoney(price.amount, price.currency),
-						discountPercent && `${discountPercent}% off`,
+						discountPercent && `优惠${discountPercent}%`,
 					].filter(Boolean);
 
 					return (
@@ -106,7 +106,7 @@ export function VariantNameSelector({
 										: "border-border bg-background text-foreground hover:border-foreground",
 									isOutOfStock && "cursor-not-allowed text-muted-foreground line-through opacity-60",
 								)}
-								title={isOutOfStock ? `${variant.name} - Out of stock` : undefined}
+								title={isOutOfStock ? `${variant.name} - 缺货` : undefined}
 								aria-label={accessibleParts.join(", ")}
 								aria-pressed={isSelected}
 							>
@@ -124,7 +124,7 @@ export function VariantNameSelector({
 									className="pointer-events-none absolute -bottom-2 -right-1 rounded-full border border-destructive bg-background px-1.5 py-0.5 text-[10px] font-semibold text-destructive"
 									aria-hidden="true"
 								>
-									-{discountPercent}%
+									-优惠{discountPercent}%
 								</span>
 							)}
 						</div>

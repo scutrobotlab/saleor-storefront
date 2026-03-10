@@ -12,15 +12,15 @@ interface SummaryRow {
 
 interface CheckoutSummaryContextProps {
 	checkout: CheckoutFragment;
-	/** Rows to display (Contact, Ship to, Method) */
+	/** 要显示的行（联系方式、配送至、配送方式） */
 	rows: SummaryRow[];
-	/** Callback when user clicks Change */
+	/** 当用户点击“更改”时的回调 */
 	onGoToStep?: (step: number) => void;
 }
 
 /**
- * Summary context showing current checkout state (Contact, Ship to, Method).
- * Used in ShippingStep and PaymentStep to show context from previous steps.
+ * 显示当前结账状态（联系方式、配送至、配送方式）的摘要上下文。
+ * 在配送步骤和支付步骤中使用，以显示先前步骤的上下文。
  */
 export const CheckoutSummaryContext: FC<CheckoutSummaryContextProps> = ({ rows, onGoToStep }) => {
 	return (
@@ -35,7 +35,7 @@ export const CheckoutSummaryContext: FC<CheckoutSummaryContextProps> = ({ rows, 
 							onClick={() => onGoToStep(row.onChangeStep!)}
 							className="shrink-0 text-sm underline underline-offset-2 hover:no-underline"
 						>
-							Change
+							更改
 						</button>
 					)}
 				</div>
@@ -45,49 +45,49 @@ export const CheckoutSummaryContext: FC<CheckoutSummaryContextProps> = ({ rows, 
 };
 
 // =============================================================================
-// Helper functions to build summary rows
+// 构建摘要行的辅助函数
 // =============================================================================
 
-/** Format address as single line string */
+/** 将地址格式化为单行字符串 */
 export function formatAddressLine(address: CheckoutFragment["shippingAddress"]): string {
 	if (!address) return "";
 	return `${address.streetAddress1}, ${address.city} ${address.postalCode}, ${address.country?.country}`;
 }
 
-/** Get shipping method display string */
+/** 获取配送方式显示字符串 */
 export function formatShippingMethod(checkout: CheckoutFragment): string {
 	const deliveryMethod = checkout.deliveryMethod;
 	const methodId = deliveryMethod?.__typename === "ShippingMethod" ? deliveryMethod.id : undefined;
 	const method = checkout.shippingMethods?.find((m) => m.id === methodId);
 
-	if (!method) return "—";
+	if (!method) return "无";
 
 	const priceStr = formatShippingPrice(checkout.shippingPrice?.gross);
 
 	return `${method.name}${priceStr ? ` · ${priceStr}` : ""}`;
 }
 
-/** Build standard summary rows for shipping step */
+/** 为配送步骤构建标准摘要行 */
 export function buildShippingSummaryRows(checkout: CheckoutFragment): SummaryRow[] {
 	return [
-		{ label: "Contact", value: checkout.email || "", onChangeStep: 1 },
-		{ label: "Ship to", value: formatAddressLine(checkout.shippingAddress), onChangeStep: 1 },
+		{ label: "联系方式", value: checkout.email || "", onChangeStep: 1 },
+		{ label: "配送至", value: formatAddressLine(checkout.shippingAddress), onChangeStep: 1 },
 	];
 }
 
-/** Build standard summary rows for payment step */
+/** 为支付步骤构建标准摘要行 */
 export function buildPaymentSummaryRows(checkout: CheckoutFragment): SummaryRow[] {
-	const rows: SummaryRow[] = [{ label: "Contact", value: checkout.email || "", onChangeStep: 1 }];
+	const rows: SummaryRow[] = [{ label: "联系方式", value: checkout.email || "", onChangeStep: 1 }];
 
 	// Only show shipping info for physical products
 	if (checkout.isShippingRequired) {
 		rows.push(
-			{ label: "Ship to", value: formatAddressLine(checkout.shippingAddress), onChangeStep: 1 },
-			{ label: "Method", value: formatShippingMethod(checkout), onChangeStep: 2 },
+			{ label: "配送至", value: formatAddressLine(checkout.shippingAddress), onChangeStep: 1 },
+			{ label: "配送方式", value: formatShippingMethod(checkout), onChangeStep: 2 },
 		);
 	} else {
 		// Digital products - show delivery type instead
-		rows.push({ label: "Delivery", value: "Digital" });
+		rows.push({ label: "配送类型", value: "数字商品" });
 	}
 
 	return rows;

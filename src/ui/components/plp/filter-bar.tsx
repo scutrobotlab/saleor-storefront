@@ -111,7 +111,7 @@ export function FilterBar({
 								<SheetTrigger asChild>
 									<Button variant="outline-solid" size="sm" className="shrink-0 bg-transparent md:hidden">
 										<SlidersHorizontal className="mr-2 h-4 w-4" />
-										Filters
+										筛选
 										{activeFilterCount > 0 && (
 											<Badge variant="secondary" className="ml-2 h-5 px-1.5 py-0 text-xs">
 												{activeFilterCount}
@@ -121,7 +121,7 @@ export function FilterBar({
 								</SheetTrigger>
 								<SheetContent side="left" className="flex w-[280px] flex-col p-0">
 									<SheetHeader className="flex-row items-center justify-between border-b border-border px-4 py-4">
-										<SheetTitle>Filters</SheetTitle>
+										<SheetTitle>筛选</SheetTitle>
 										<SheetCloseButton />
 									</SheetHeader>
 
@@ -131,7 +131,7 @@ export function FilterBar({
 											{categoryOptions.length > 0 && onCategoryToggle && (
 												<div className="px-4 py-6">
 													<h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted-foreground">
-														Category
+														分类
 													</h3>
 													<div className="space-y-3">
 														{categoryOptions.map((category) => {
@@ -163,7 +163,7 @@ export function FilterBar({
 											{colorOptions.length > 0 && onColorToggle && (
 												<div className="px-4 py-6">
 													<h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted-foreground">
-														Color
+														颜色
 													</h3>
 													<div className="space-y-3">
 														{colorOptions.map((color) => {
@@ -202,7 +202,7 @@ export function FilterBar({
 											{sizeOptions.length > 0 && onSizeToggle && (
 												<div className="px-4 py-6">
 													<h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted-foreground">
-														Size
+														尺寸
 													</h3>
 													<div className="flex flex-wrap gap-2">
 														{sizeOptions.map((size) => {
@@ -229,7 +229,7 @@ export function FilterBar({
 											{priceRanges.length > 0 && onPriceRangeChange && (
 												<div className="px-4 py-6">
 													<h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted-foreground">
-														Price
+														价格
 													</h3>
 													<div className="space-y-3">
 														{priceRanges.map((range) => {
@@ -268,7 +268,7 @@ export function FilterBar({
 													setMobileFiltersOpen(false);
 												}}
 											>
-												Clear all filters ({activeFilterCount})
+												清除所有筛选 ({activeFilterCount})
 											</Button>
 										</div>
 									)}
@@ -285,7 +285,7 @@ export function FilterBar({
 										size="sm"
 										className="hidden shrink-0 bg-transparent md:flex"
 									>
-										Category
+										分类
 										{selectedCategories.length > 0 && (
 											<Badge variant="secondary" className="ml-2 h-5 px-1.5 py-0 text-xs">
 												{selectedCategories.length}
@@ -295,7 +295,7 @@ export function FilterBar({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="start" className="w-56">
-									<DropdownMenuLabel>Category</DropdownMenuLabel>
+									<DropdownMenuLabel>分类</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									{categoryOptions.map((category) => (
 										<DropdownMenuCheckboxItem
@@ -319,7 +319,7 @@ export function FilterBar({
 										size="sm"
 										className="hidden shrink-0 bg-transparent md:flex"
 									>
-										Color
+										颜色
 										{selectedColors.length > 0 && (
 											<Badge variant="secondary" className="ml-2 h-5 px-1.5 py-0 text-xs">
 												{selectedColors.length}
@@ -329,7 +329,7 @@ export function FilterBar({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="start" className="w-56">
-									<DropdownMenuLabel>Color</DropdownMenuLabel>
+									<DropdownMenuLabel>颜色</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									{colorOptions.map((color) => (
 										<DropdownMenuCheckboxItem
@@ -360,7 +360,7 @@ export function FilterBar({
 										size="sm"
 										className="hidden shrink-0 bg-transparent md:flex"
 									>
-										Size
+										尺寸
 										{selectedSizes.length > 0 && (
 											<Badge variant="secondary" className="ml-2 h-5 px-1.5 py-0 text-xs">
 												{selectedSizes.length}
@@ -370,7 +370,7 @@ export function FilterBar({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="start" className="w-48">
-									<DropdownMenuLabel>Size</DropdownMenuLabel>
+									<DropdownMenuLabel>尺寸</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									{sizeOptions.map((size) => (
 										<DropdownMenuCheckboxItem
@@ -395,7 +395,7 @@ export function FilterBar({
 										size="sm"
 										className="hidden shrink-0 bg-transparent md:flex"
 									>
-										Price
+										价格
 										{selectedPriceRange && (
 											<Badge variant="secondary" className="ml-2 h-5 px-1.5 py-0 text-xs">
 												1
@@ -405,7 +405,7 @@ export function FilterBar({
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="start" className="w-48">
-									<DropdownMenuLabel>Price Range</DropdownMenuLabel>
+									<DropdownMenuLabel>价格范围</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									<DropdownMenuRadioGroup
 										value={selectedPriceRange || ""}
@@ -424,14 +424,12 @@ export function FilterBar({
 
 					{/* Right: Result Count + Sort */}
 					<div className="flex shrink-0 items-center gap-3">
-						<span className="hidden text-sm text-muted-foreground sm:block">
-							{resultCount} {resultCount === 1 ? "product" : "products"}
-						</span>
+						<span className="hidden text-sm text-muted-foreground sm:block">{resultCount} 件商品</span>
 
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button variant="outline-solid" size="sm" className="bg-transparent">
-									Sort
+									排序
 									<ChevronDown className="ml-1.5 h-4 w-4 opacity-50" />
 								</Button>
 							</DropdownMenuTrigger>
@@ -440,11 +438,11 @@ export function FilterBar({
 									value={sortValue}
 									onValueChange={(v) => onSortChange(v as SortOption)}
 								>
-									<DropdownMenuRadioItem value="featured">Featured</DropdownMenuRadioItem>
-									<DropdownMenuRadioItem value="newest">Newest</DropdownMenuRadioItem>
-									<DropdownMenuRadioItem value="price_asc">Price: Low to High</DropdownMenuRadioItem>
-									<DropdownMenuRadioItem value="price_desc">Price: High to Low</DropdownMenuRadioItem>
-									<DropdownMenuRadioItem value="bestselling">Best Selling</DropdownMenuRadioItem>
+									<DropdownMenuRadioItem value="featured">推荐</DropdownMenuRadioItem>
+									<DropdownMenuRadioItem value="newest">最新</DropdownMenuRadioItem>
+									<DropdownMenuRadioItem value="price_asc">价格：从低到高</DropdownMenuRadioItem>
+									<DropdownMenuRadioItem value="price_desc">价格：从高到低</DropdownMenuRadioItem>
+									<DropdownMenuRadioItem value="bestselling">最畅销</DropdownMenuRadioItem>
 								</DropdownMenuRadioGroup>
 							</DropdownMenuContent>
 						</DropdownMenu>
@@ -467,7 +465,7 @@ export function FilterBar({
 									className="hover:bg-background/50 ml-0.5 rounded-full p-0.5 transition-colors"
 								>
 									<X className="h-3 w-3" />
-									<span className="sr-only">Remove {filter.value} filter</span>
+									<span className="sr-only">移除 {filter.value} 筛选</span>
 								</button>
 							</Badge>
 						))}
@@ -477,7 +475,7 @@ export function FilterBar({
 							className="h-6 shrink-0 px-2 text-xs text-muted-foreground"
 							onClick={onClearFilters}
 						>
-							Clear all
+							清除所有
 						</Button>
 					</div>
 				)}

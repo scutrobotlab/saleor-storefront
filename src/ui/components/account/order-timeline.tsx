@@ -13,24 +13,24 @@ type TimelineEvent = {
 };
 
 const fulfillmentLabels: Record<FulfillmentStatus, { label: string; description: string }> = {
-	[FulfillmentStatus.Fulfilled]: { label: "Shipped", description: "Your order has been shipped" },
+	[FulfillmentStatus.Fulfilled]: { label: "已发货", description: "您的订单已发货" },
 	[FulfillmentStatus.Canceled]: {
-		label: "Fulfillment cancelled",
-		description: "Shipment was cancelled",
+		label: "发货已取消",
+		description: "发货已取消",
 	},
-	[FulfillmentStatus.Refunded]: { label: "Refunded", description: "Payment has been refunded" },
+	[FulfillmentStatus.Refunded]: { label: "已退款", description: "款项已退回" },
 	[FulfillmentStatus.RefundedAndReturned]: {
-		label: "Refunded & Returned",
-		description: "Items returned and refunded",
+		label: "已退款并退货",
+		description: "商品已退货并退款",
 	},
 	[FulfillmentStatus.Replaced]: {
-		label: "Replaced",
-		description: "Items have been replaced",
+		label: "已更换",
+		description: "商品已更换",
 	},
-	[FulfillmentStatus.Returned]: { label: "Returned", description: "Items have been returned" },
+	[FulfillmentStatus.Returned]: { label: "已退货", description: "商品已退回" },
 	[FulfillmentStatus.WaitingForApproval]: {
-		label: "Awaiting approval",
-		description: "Fulfillment is pending approval",
+		label: "等待批准",
+		description: "发货正在等待批准",
 	},
 };
 
@@ -38,8 +38,8 @@ function buildTimeline(order: OrderFullDetailsFragment): TimelineEvent[] {
 	const events: TimelineEvent[] = [];
 
 	events.push({
-		label: "Order confirmed",
-		description: "Payment confirmed and order placed",
+		label: "订单已确认",
+		description: "付款已确认，订单已下达",
 		date: new Date(order.created),
 		isCurrent: false,
 	});
@@ -50,10 +50,7 @@ function buildTimeline(order: OrderFullDetailsFragment): TimelineEvent[] {
 			description: "",
 		};
 		const itemCount = fulfillment.lines?.reduce((sum, l) => sum + l.quantity, 0) ?? 0;
-		const description =
-			itemCount > 0
-				? `${config.description} (${itemCount} item${itemCount === 1 ? "" : "s"})`
-				: config.description;
+		const description = itemCount > 0 ? `${config.description} (${itemCount} 件商品)` : config.description;
 
 		events.push({
 			label: config.label,
@@ -64,8 +61,8 @@ function buildTimeline(order: OrderFullDetailsFragment): TimelineEvent[] {
 
 		if (fulfillment.trackingNumber) {
 			events.push({
-				label: "Tracking updated",
-				description: `Tracking number: ${fulfillment.trackingNumber}`,
+				label: "追踪信息已更新",
+				description: `追踪号码: ${fulfillment.trackingNumber}`,
 				date: new Date(fulfillment.created),
 				isCurrent: false,
 			});
@@ -89,7 +86,7 @@ export function OrderTimeline({ order }: Props) {
 	return (
 		<div className="rounded-xl border">
 			<div className="border-b px-5 py-4">
-				<h2 className="text-sm font-semibold">Order Timeline</h2>
+				<h2 className="text-sm font-semibold">订单时间线</h2>
 			</div>
 			<div className="px-5 py-4">
 				<ol className="relative ml-3 border-l border-border">

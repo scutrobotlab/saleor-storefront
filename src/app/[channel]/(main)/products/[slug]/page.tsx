@@ -54,7 +54,7 @@ export async function generateMetadata(props: {
 	const product = await getProductData(params.slug, params.channel);
 
 	if (!product) {
-		return { title: "Product Not Found" };
+		return { title: "未找到商品" };
 	}
 
 	const description = product.seoDescription || product.name;
@@ -127,7 +127,7 @@ async function ProductContent({
 	const careInstructions = extractCareInstructions(product);
 
 	const breadcrumbs = [
-		{ label: "Home", href: `/${params.channel}` },
+		{ label: "首页", href: `/${params.channel}` },
 		...(product.category
 			? [{ label: product.category.name, href: `/${params.channel}/categories/${product.category.slug}` }]
 			: []),

@@ -19,18 +19,16 @@ export default function NotFound() {
 				</span>
 
 				{/* Heading */}
-				<h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground">Page Not Found</h1>
+				<h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground">页面未找到</h1>
 
 				{/* Message */}
-				<p className="mb-8 text-muted-foreground">
-					The page you&apos;re looking for doesn&apos;t exist or has been moved.
-				</p>
+				<p className="mb-8 text-muted-foreground">您要查找的页面不存在或已移动。</p>
 
 				{/* Actions */}
 				<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
 					<Link href="/" className={`${buttonBase} hover:bg-primary/90 bg-primary text-primary-foreground`}>
 						<Home className="h-4 w-4" />
-						Go Home
+						返回首页
 					</Link>
 
 					<Link
@@ -38,7 +36,7 @@ export default function NotFound() {
 						className={`${buttonBase} border border-input bg-background hover:bg-accent hover:text-accent-foreground`}
 					>
 						<Search className="h-4 w-4" />
-						Browse Products
+						浏览商品
 					</Link>
 				</div>
 			</div>

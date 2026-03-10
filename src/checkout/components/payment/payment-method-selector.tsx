@@ -93,8 +93,8 @@ export const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({
 
 	return (
 		<section className="space-y-4">
-			<h2 className="text-lg font-semibold">Payment</h2>
-			<p className="text-sm text-muted-foreground">All transactions are secure and encrypted.</p>
+			<h2 className="text-lg font-semibold">支付</h2>
+			<p className="text-sm text-muted-foreground">所有交易均安全加密。</p>
 
 			<div className="space-y-3">
 				{/* Credit Card */}
@@ -116,7 +116,7 @@ export const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({
 							/>
 							<RadioIndicator selected={value === "card"} />
 							<CreditCard className="h-5 w-5 text-muted-foreground" />
-							<span className="font-medium">Credit card</span>
+							<span className="font-medium">信用卡</span>
 							<div className="ml-auto flex gap-1">
 								<CardBrandIcon brand="visa" />
 								<CardBrandIcon brand="mastercard" />
@@ -128,7 +128,7 @@ export const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({
 							<div className="bg-secondary/30 space-y-4 border-t border-border p-4">
 								<div className="relative">
 									<Input
-										placeholder="Card number"
+										placeholder="卡号"
 										value={card.cardNumber}
 										onChange={(e) => updateCardField("cardNumber", formatCardNumber(e.target.value))}
 										maxLength={19}
@@ -138,20 +138,20 @@ export const PaymentMethodSelector: FC<PaymentMethodSelectorProps> = ({
 								</div>
 								<div className="grid grid-cols-2 gap-4">
 									<Input
-										placeholder="MM/YY"
+										placeholder="月月/年年"
 										value={card.expiry}
 										onChange={(e) => updateCardField("expiry", formatExpiry(e.target.value))}
 										maxLength={5}
 									/>
 									<Input
-										placeholder="CVC"
+										placeholder="CVC码"
 										value={card.cvc}
 										onChange={(e) => updateCardField("cvc", e.target.value.replace(/\D/g, ""))}
 										maxLength={4}
 									/>
 								</div>
 								<Input
-									placeholder="Name on card"
+									placeholder="持卡人姓名"
 									value={card.nameOnCard}
 									onChange={(e) => updateCardField("nameOnCard", e.target.value)}
 								/>

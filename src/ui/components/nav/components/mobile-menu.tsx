@@ -35,13 +35,13 @@ export const MobileMenu = ({ children }: Props) => {
 				<button
 					type="button"
 					className="flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-accent md:hidden"
-					aria-label="Open menu"
+					aria-label="打开菜单"
 				>
 					<Menu className="h-5 w-5" />
 				</button>
 			</SheetTrigger>
 			<SheetContent side="left" className="flex w-full flex-col p-0 sm:max-w-sm">
-				<SheetTitle className="sr-only">Navigation menu</SheetTitle>
+				<SheetTitle className="sr-only">导航菜单</SheetTitle>
 				<SheetHeader className="justify-between border-b border-border px-4 py-4">
 					<Logo />
 					<SheetCloseButton className="static" />

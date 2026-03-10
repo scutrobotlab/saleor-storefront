@@ -7,13 +7,13 @@ import { formatMoney, getHrefForVariant } from "@/lib/utils";
 import { LinkWithChannel } from "@/ui/atoms/link-with-channel";
 
 export const metadata = {
-	title: "Shopping Cart · Saleor Storefront example",
+	title: "购物车 · Saleor Storefront 示例",
 };
 
 export default function Page(props: { params: Promise<{ channel: string }> }) {
 	return (
 		<section className="mx-auto max-w-7xl p-8">
-			<h1 className="mt-8 text-3xl font-bold text-neutral-900">Your Shopping Cart</h1>
+			<h1 className="mt-8 text-3xl font-bold text-neutral-900">您的购物车</h1>
 			{/* Cart content is dynamic (reads cookies) - wrap in Suspense */}
 			<Suspense fallback={<CartSkeleton />}>
 				<CartContent params={props.params} />
@@ -34,14 +34,12 @@ async function CartContent({ params: paramsPromise }: { params: Promise<{ channe
 	if (!checkout || checkout.lines.length < 1) {
 		return (
 			<div className="mt-12">
-				<p className="my-12 text-sm text-neutral-500">
-					Looks like you haven&apos;t added any items to the cart yet.
-				</p>
+				<p className="my-12 text-sm text-neutral-500">您似乎还没有添加任何商品到购物车。</p>
 				<LinkWithChannel
 					href="/products"
 					className="inline-block max-w-full rounded border border-transparent bg-neutral-900 px-6 py-3 text-center font-medium text-neutral-50 hover:bg-neutral-800 aria-disabled:cursor-not-allowed aria-disabled:bg-neutral-500 sm:px-16"
 				>
-					Explore products
+					浏览商品
 				</LinkWithChannel>
 			</div>
 		);
@@ -80,7 +78,7 @@ async function CartContent({ params: paramsPromise }: { params: Promise<{ channe
 									</LinkWithChannel>
 									<p className="mt-1 text-sm text-neutral-500">{item.variant?.product?.category?.name}</p>
 									{item.variant.name !== item.variant.id && Boolean(item.variant.name) && (
-										<p className="mt-1 text-sm text-neutral-500">Variant: {item.variant.name}</p>
+										<p className="mt-1 text-sm text-neutral-500">款式: {item.variant.name}</p>
 									)}
 								</div>
 								<p className="text-right font-semibold text-neutral-900">
@@ -88,7 +86,7 @@ async function CartContent({ params: paramsPromise }: { params: Promise<{ channe
 								</p>
 							</div>
 							<div className="flex justify-between">
-								<div className="text-sm font-bold">Qty: {item.quantity}</div>
+								<div className="text-sm font-bold">数量: {item.quantity}</div>
 								<DeleteLineButton checkoutId={checkoutId} lineId={item.id} />
 							</div>
 						</div>
@@ -100,8 +98,8 @@ async function CartContent({ params: paramsPromise }: { params: Promise<{ channe
 				<div className="rounded border bg-neutral-50 px-4 py-2">
 					<div className="flex items-center justify-between gap-2 py-2">
 						<div>
-							<p className="font-semibold text-neutral-900">Your Total</p>
-							<p className="mt-1 text-sm text-neutral-500">Shipping will be calculated in the next step</p>
+							<p className="font-semibold text-neutral-900">总计</p>
+							<p className="mt-1 text-sm text-neutral-500">运费将在下一步计算</p>
 						</div>
 						<div className="font-medium text-neutral-900">
 							{formatMoney(checkout.totalPrice.gross.amount, checkout.totalPrice.gross.currency)}

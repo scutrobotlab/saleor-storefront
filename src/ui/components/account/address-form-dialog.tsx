@@ -47,21 +47,21 @@ export function AddressFormDialog({ address }: Props) {
 	return (
 		<>
 			{isEditing ? (
-				<Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label="Edit address">
+				<Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label="编辑地址">
 					<Pencil className="h-3.5 w-3.5" />
 				</Button>
 			) : (
 				<Button variant="outline-solid" size="sm" onClick={() => setOpen(true)}>
 					<Plus className="mr-1 h-4 w-4" />
-					Add address
+					添加地址
 				</Button>
 			)}
 			<Sheet open={open} onOpenChange={setOpen}>
 				<SheetContent side="right" className="overflow-y-auto p-6">
 					<SheetHeader className="mb-6">
-						<SheetTitle>{isEditing ? "Edit address" : "Add new address"}</SheetTitle>
+						<SheetTitle>{isEditing ? "编辑地址" : "添加新地址"}</SheetTitle>
 						<SheetDescription className="sr-only">
-							{isEditing ? "Update your address details" : "Add a new address to your account"}
+							{isEditing ? "更新您的地址详情" : "为您的账户添加新地址"}
 						</SheetDescription>
 						<SheetCloseButton />
 					</SheetHeader>
@@ -77,7 +77,7 @@ export function AddressFormDialog({ address }: Props) {
 
 						<div className="grid gap-4 sm:grid-cols-2">
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-firstName">First name</Label>
+								<Label htmlFor="addr-firstName">名</Label>
 								<Input
 									id="addr-firstName"
 									name="firstName"
@@ -87,7 +87,7 @@ export function AddressFormDialog({ address }: Props) {
 								/>
 							</div>
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-lastName">Last name</Label>
+								<Label htmlFor="addr-lastName">姓</Label>
 								<Input
 									id="addr-lastName"
 									name="lastName"
@@ -99,7 +99,7 @@ export function AddressFormDialog({ address }: Props) {
 						</div>
 
 						<div className="space-y-1.5">
-							<Label htmlFor="addr-companyName">Company (optional)</Label>
+							<Label htmlFor="addr-companyName">公司（可选）</Label>
 							<Input
 								id="addr-companyName"
 								name="companyName"
@@ -109,7 +109,7 @@ export function AddressFormDialog({ address }: Props) {
 						</div>
 
 						<div className="space-y-1.5">
-							<Label htmlFor="addr-streetAddress1">Street address</Label>
+							<Label htmlFor="addr-streetAddress1">街道地址</Label>
 							<Input
 								id="addr-streetAddress1"
 								name="streetAddress1"
@@ -120,7 +120,7 @@ export function AddressFormDialog({ address }: Props) {
 						</div>
 
 						<div className="space-y-1.5">
-							<Label htmlFor="addr-streetAddress2">Apt, suite, etc. (optional)</Label>
+							<Label htmlFor="addr-streetAddress2">公寓、套房等（可选）</Label>
 							<Input
 								id="addr-streetAddress2"
 								name="streetAddress2"
@@ -131,7 +131,7 @@ export function AddressFormDialog({ address }: Props) {
 
 						<div className="grid gap-4 sm:grid-cols-2">
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-city">City</Label>
+								<Label htmlFor="addr-city">城市</Label>
 								<Input
 									id="addr-city"
 									name="city"
@@ -141,7 +141,7 @@ export function AddressFormDialog({ address }: Props) {
 								/>
 							</div>
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-postalCode">Postal code</Label>
+								<Label htmlFor="addr-postalCode">邮政编码</Label>
 								<Input
 									id="addr-postalCode"
 									name="postalCode"
@@ -154,7 +154,7 @@ export function AddressFormDialog({ address }: Props) {
 
 						<div className="grid gap-4 sm:grid-cols-2">
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-countryArea">State / Province</Label>
+								<Label htmlFor="addr-countryArea">州/省</Label>
 								<Input
 									id="addr-countryArea"
 									name="countryArea"
@@ -163,7 +163,7 @@ export function AddressFormDialog({ address }: Props) {
 								/>
 							</div>
 							<div className="space-y-1.5">
-								<Label htmlFor="addr-country">Country code</Label>
+								<Label htmlFor="addr-country">国家代码</Label>
 								<Input
 									id="addr-country"
 									name="country"
@@ -177,7 +177,7 @@ export function AddressFormDialog({ address }: Props) {
 						</div>
 
 						<div className="space-y-1.5">
-							<Label htmlFor="addr-phone">Phone (optional)</Label>
+							<Label htmlFor="addr-phone">电话（可选）</Label>
 							<Input
 								id="addr-phone"
 								name="phone"
@@ -189,7 +189,7 @@ export function AddressFormDialog({ address }: Props) {
 
 						<div className="flex gap-2 pt-2">
 							<Button type="submit" disabled={isPending} className="flex-1">
-								{isPending ? "Saving…" : isEditing ? "Update address" : "Add address"}
+								{isPending ? "保存中…" : isEditing ? "更新地址" : "添加地址"}
 							</Button>
 						</div>
 					</form>

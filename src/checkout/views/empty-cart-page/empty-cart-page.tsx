@@ -26,12 +26,10 @@ export const EmptyCartPage = () => {
 						</div>
 
 						{/* Title */}
-						<h1 className="mb-2 text-xl font-semibold text-foreground">Your cart is empty</h1>
+						<h1 className="mb-2 text-xl font-semibold text-foreground">您的购物车是空的</h1>
 
 						{/* Message */}
-						<p className="mb-8 text-muted-foreground">
-							Looks like you haven&apos;t added anything to your cart yet.
-						</p>
+						<p className="mb-8 text-muted-foreground">您似乎还没有将任何商品添加到购物车。</p>
 
 						{/* Actions */}
 						<div className="flex flex-col gap-3">
@@ -40,14 +38,14 @@ export const EmptyCartPage = () => {
 								className="shadow-xs hover:bg-primary/90 focus-visible:outline-hidden inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary font-medium text-primary-foreground transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 							>
 								<ShoppingBag className="h-4 w-4" />
-								Start Shopping
+								开始购物
 							</Link>
 							<button
 								onClick={() => history.back()}
 								className="flex items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
 							>
 								<ArrowLeft className="h-4 w-4" />
-								Go back
+								返回
 							</button>
 						</div>
 					</div>

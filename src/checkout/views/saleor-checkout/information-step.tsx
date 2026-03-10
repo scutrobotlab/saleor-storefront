@@ -183,7 +183,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 
 	const handleEmailBlur = () => {
 		if (email && !validateEmail(email)) {
-			setErrors((prev) => ({ ...prev, email: "Please enter a valid email address" }));
+			setErrors((prev) => ({ ...prev, email: "请输入有效的电子邮件地址" }));
 		}
 	};
 
@@ -246,12 +246,12 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 
 			// Validate email (guests only)
 			if (!authenticated) {
-				if (!email) newErrors.email = "Email is required";
-				else if (!validateEmail(email)) newErrors.email = "Please enter a valid email";
+				if (!email) newErrors.email = "电子邮件是必填项";
+				else if (!validateEmail(email)) newErrors.email = "请输入有效的电子邮件";
 
 				if (createAccount) {
-					if (!accountPassword) newErrors.password = "Password is required";
-					else if (accountPassword.length < 8) newErrors.password = "Password must be at least 8 characters";
+					if (!accountPassword) newErrors.password = "密码是必填项";
+					else if (accountPassword.length < 8) newErrors.password = "密码至少需要8个字符";
 				}
 			}
 
@@ -259,12 +259,12 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 			if (checkout.isShippingRequired) {
 				if (authenticated && user?.addresses?.length && !showNewAddressForm) {
 					if (!selectedAddressId) {
-						newErrors.address = "Please select a shipping address";
+						newErrors.address = "请选择一个收货地址";
 					}
 				} else {
 					orderedAddressFields.forEach((field) => {
 						if (isRequiredField(field) && !formData[field]) {
-							newErrors[field] = `${getFieldLabel(field)} is required`;
+							newErrors[field] = `${getFieldLabel(field)} 是必填项`;
 						}
 					});
 				}
@@ -290,14 +290,14 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 						languageCode: localeConfig.graphqlLanguageCode,
 					});
 					if (emailResult.error) {
-						setErrors({ email: "Failed to update email" });
+						setErrors({ email: "更新电子邮件失败" });
 						return;
 					}
 					const emailErrors = emailResult.data?.checkoutEmailUpdate?.errors;
 					if (emailErrors?.length) {
 						const errorMap: Record<string, string> = {};
 						emailErrors.forEach((err) => {
-							errorMap[err.field || "email"] = err.message || "Invalid value";
+							errorMap[err.field || "email"] = err.message || "无效值";
 						});
 						setErrors(errorMap);
 						return;
@@ -316,7 +316,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 						if (registerResult.data?.accountRegister?.errors?.length) {
 							const err = registerResult.data.accountRegister.errors[0];
 							if (err.code !== "UNIQUE") {
-								setErrors({ password: err.message || "Failed to create account" });
+								setErrors({ password: err.message || "创建账户失败" });
 								return;
 							}
 						}
@@ -343,7 +343,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 						});
 
 						if (addressResult.error) {
-							setErrors({ streetAddress1: "Failed to update address" });
+							setErrors({ streetAddress1: "更新地址失败" });
 							return;
 						}
 						const addressErrors = addressResult.data?.checkoutShippingAddressUpdate?.errors;
@@ -351,7 +351,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 							const errorMap: Record<string, string> = {};
 							addressErrors.forEach((err) => {
 								const field = err.field || "streetAddress1";
-								errorMap[field] = err.message || "Invalid value";
+								errorMap[field] = err.message || "无效值";
 							});
 							setErrors(errorMap);
 							return;
@@ -423,11 +423,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 	}
 
 	// ----- Render: Main Form -----
-	const buttonText = isSubmitting
-		? "Saving..."
-		: checkout.isShippingRequired
-			? "Continue to shipping"
-			: "Continue to payment";
+	const buttonText = isSubmitting ? "正在保存..." : checkout.isShippingRequired ? "继续配送" : "继续付款";
 
 	return (
 		<form className="space-y-8" onSubmit={handleSubmit} noValidate>
@@ -487,7 +483,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 				type="submit"
 				onAction={handleSubmit}
 				isLoading={isSubmitting}
-				loadingText="Saving..."
+				loadingText="正在保存..."
 			/>
 		</form>
 	);

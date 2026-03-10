@@ -35,8 +35,8 @@ export function ButtonOption({
 	// Build accessible label with context
 	const accessibleParts = [
 		labelPrefix ? `${labelPrefix} ${option.name}` : option.name,
-		isOutOfStock && "out of stock",
-		hasDiscount && `${option.discountPercent}% off`,
+		isOutOfStock && "缺货",
+		hasDiscount && `${option.discountPercent}% 折扣`,
 	].filter(Boolean);
 
 	return (
@@ -65,11 +65,11 @@ export function ButtonOption({
 				)}
 				title={
 					isOutOfStock
-						? `${option.name} - Out of stock`
+						? `${option.name} - 缺货`
 						: isIncompatible
-							? `${option.name} - Will change other selections`
+							? `${option.name} - 将更改其他选择`
 							: option.discountPercent
-								? `${option.name} - ${option.discountPercent}% off`
+								? `${option.name} - ${option.discountPercent}% 折扣`
 								: undefined
 				}
 				aria-label={accessibleParts.join(", ")}
@@ -91,7 +91,7 @@ export function ButtonOption({
 
 // Backwards-compatible aliases
 export function SizeButtonOption(props: OptionRendererProps) {
-	return <ButtonOption {...props} labelPrefix="Size" />;
+	return <ButtonOption {...props} labelPrefix="尺寸" />;
 }
 
 export function TextOption(props: OptionRendererProps) {

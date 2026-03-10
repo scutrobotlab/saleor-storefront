@@ -22,12 +22,10 @@ export default function ProductNotFound() {
 				</span>
 
 				{/* Heading */}
-				<h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground">Product Not Found</h1>
+				<h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground">未找到商品</h1>
 
 				{/* Message */}
-				<p className="mb-8 text-muted-foreground">
-					This product may have been removed, renamed, or is temporarily unavailable.
-				</p>
+				<p className="mb-8 text-muted-foreground">该商品可能已被删除、重命名或暂时无法购买。</p>
 
 				{/* Actions */}
 				<div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -36,7 +34,7 @@ export default function ProductNotFound() {
 						className={`${buttonBase} hover:bg-primary/90 bg-primary text-primary-foreground`}
 					>
 						<Search className="h-4 w-4" />
-						Browse Products
+						浏览商品
 					</Link>
 
 					<Link
@@ -44,7 +42,7 @@ export default function ProductNotFound() {
 						className={`${buttonBase} border border-input bg-background hover:bg-accent hover:text-accent-foreground`}
 					>
 						<Home className="h-4 w-4" />
-						Go Home
+						返回首页
 					</Link>
 				</div>
 
@@ -58,7 +56,7 @@ export default function ProductNotFound() {
 					className="mt-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
 				>
 					<ArrowLeft className="h-3 w-3" />
-					Go back
+					返回
 				</Link>
 			</div>
 		</div>

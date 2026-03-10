@@ -17,7 +17,7 @@ export const generateMetadata = async (props: { params: Promise<{ slug: string }
 	const page = result.ok ? result.data.page : null;
 
 	return {
-		title: `${page?.seoTitle || page?.title || "Page"} · Saleor Storefront example`,
+		title: `${page?.seoTitle || page?.title || "页面"} · Saleor 店面示例`,
 		description: page?.seoDescription || page?.seoTitle || page?.title,
 	};
 };

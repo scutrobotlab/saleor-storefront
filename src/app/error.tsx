@@ -25,7 +25,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 	// Extract error info
 	const saleorError = error as SaleorError;
 	const isRetryable = saleorError.isRetryable ?? true;
-	const userMessage = saleorError.userMessage ?? "Something went wrong loading this page.";
+	const userMessage = saleorError.userMessage ?? "加载此页面时出现问题。";
 
 	// Determine icon and action based on error type
 	const errorType = saleorError.type ?? "unknown";
@@ -43,7 +43,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
 				{/* Heading */}
 				<h1 className="mb-2 text-2xl font-bold tracking-tight text-foreground">
-					{errorType === "network" ? "Connection Error" : "Something Went Wrong"}
+					{errorType === "network" ? "连接错误" : "发生错误"}
 				</h1>
 
 				{/* Message */}
@@ -57,7 +57,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 							className={`${buttonBase} hover:bg-primary/90 bg-primary text-primary-foreground`}
 						>
 							<RefreshCw className="h-4 w-4" />
-							Try Again
+							重试
 						</button>
 					)}
 
@@ -70,7 +70,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 						}`}
 					>
 						<Home className="h-4 w-4" />
-						Go Home
+						返回主页
 					</Link>
 				</div>
 
@@ -80,11 +80,11 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 					className="mt-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
 				>
 					<ArrowLeft className="h-3 w-3" />
-					Go back
+					返回
 				</button>
 
 				{/* Error digest for support (production only) */}
-				{error.digest && <p className="text-muted-foreground/60 mt-8 text-xs">Error ID: {error.digest}</p>}
+				{error.digest && <p className="text-muted-foreground/60 mt-8 text-xs">错误 ID：{error.digest}</p>}
 			</div>
 		</div>
 	);

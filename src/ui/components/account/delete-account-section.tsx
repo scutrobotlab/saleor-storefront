@@ -31,9 +31,7 @@ export function DeleteAccountSection() {
 	if (sent) {
 		return (
 			<div aria-live="polite" className="rounded-lg border border-border bg-green-50 p-4">
-				<p className="text-sm text-green-800">
-					A confirmation email has been sent. Please check your inbox to complete account deletion.
-				</p>
+				<p className="text-sm text-green-800">一封确认邮件已发送。请检查您的收件箱以完成账户删除。</p>
 			</div>
 		);
 	}
@@ -41,10 +39,8 @@ export function DeleteAccountSection() {
 	return (
 		<div className="space-y-3">
 			<div>
-				<p className="text-sm font-medium text-destructive">Delete account</p>
-				<p className="text-sm text-muted-foreground">
-					Permanently remove your account and all associated data.
-				</p>
+				<p className="text-sm font-medium text-destructive">删除账户</p>
+				<p className="text-sm text-muted-foreground">永久删除您的账户及所有相关数据。</p>
 			</div>
 
 			{error && (
@@ -55,22 +51,19 @@ export function DeleteAccountSection() {
 
 			{!showConfirm ? (
 				<Button variant="destructive" size="sm" onClick={() => setShowConfirm(true)}>
-					Delete account
+					删除账户
 				</Button>
 			) : (
 				<div className="border-destructive/20 bg-destructive/5 flex items-start gap-3 rounded-lg border p-4">
 					<AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
 					<div className="space-y-3">
-						<p className="text-sm">
-							This action cannot be undone. You will receive a confirmation email before your account is
-							deleted.
-						</p>
+						<p className="text-sm">此操作无法撤销。您的账户在删除前会收到一封确认邮件。</p>
 						<div className="flex gap-2">
 							<Button variant="destructive" size="sm" onClick={handleDelete} disabled={isPending}>
-								{isPending ? "Sending…" : "Yes, delete my account"}
+								{isPending ? "正在发送…" : "是的，删除我的账户"}
 							</Button>
 							<Button variant="ghost" size="sm" onClick={() => setShowConfirm(false)}>
-								Cancel
+								取消
 							</Button>
 						</div>
 					</div>

@@ -5,9 +5,9 @@ import { executePublicGraphQL } from "@/lib/graphql";
 import { ProductList } from "@/ui/components/product-list";
 
 export const metadata = {
-	title: "ACME Storefront, powered by Saleor & Next.js",
+	title: "ACME 店铺, 由 Saleor & Next.js 提供支持",
 	description:
-		"Storefront Next.js Example for building performant e-commerce experiences with Saleor - the composable, headless commerce platform for global brands.",
+		"用于构建高性能电商体验的 Storefront Next.js 示例，基于 Saleor——面向全球品牌的模块化无头商务平台。",
 };
 
 /**
@@ -32,7 +32,7 @@ async function getFeaturedProducts(channel: string) {
 	});
 
 	if (!result.ok) {
-		console.warn(`[Homepage] Failed to fetch featured products for ${channel}:`, result.error.message);
+		console.warn(`[Homepage] 未能获取 ${channel} 的特色商品:`, result.error.message);
 		return [];
 	}
 
@@ -47,7 +47,7 @@ async function getFeaturedProducts(channel: string) {
 export default function Page(props: { params: Promise<{ channel: string }> }) {
 	return (
 		<section className="mx-auto max-w-7xl p-8 pb-16">
-			<h2 className="sr-only">Product list</h2>
+			<h2 className="sr-only">商品列表</h2>
 			<Suspense
 				fallback={
 					<ul

@@ -7,8 +7,8 @@ import { CurrentUserDocument } from "@/gql/graphql";
 import { AuthProvider } from "@/lib/auth";
 
 export const metadata = {
-	title: "Sign In",
-	description: "Sign in to your account to access your orders and saved addresses.",
+	title: "登录",
+	description: "登录您的账户以查看订单和保存的地址。",
 };
 
 export default function LoginPage(props: { params: Promise<{ channel: string }> }) {

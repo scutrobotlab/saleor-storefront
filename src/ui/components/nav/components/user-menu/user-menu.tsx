@@ -17,7 +17,7 @@ export function UserMenu({ user }: Props) {
 	return (
 		<Menu as="div" className="relative">
 			<Menu.Button className="focus:outline-hidden relative flex rounded-full bg-neutral-200 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
-				<span className="sr-only">Open user menu</span>
+				<span className="sr-only">打开用户菜单</span>
 				<UserAvatar user={user} />
 			</Menu.Button>
 			<Transition
@@ -41,7 +41,7 @@ export function UserMenu({ user }: Props) {
 										"block px-4 py-2 text-sm font-medium text-neutral-500 hover:text-neutral-700",
 									)}
 								>
-									My account
+									我的账户
 								</LinkWithChannel>
 							)}
 						</Menu.Item>
@@ -54,7 +54,7 @@ export function UserMenu({ user }: Props) {
 										"block px-4 py-2 text-sm font-medium text-neutral-500 hover:text-neutral-700",
 									)}
 								>
-									My orders
+									我的订单
 								</LinkWithChannel>
 							)}
 						</Menu.Item>
@@ -70,7 +70,7 @@ export function UserMenu({ user }: Props) {
 											"w-full px-4 py-2 text-start text-sm font-medium text-neutral-500 hover:text-neutral-700",
 										)}
 									>
-										Log Out
+										退出登录
 									</button>
 								</form>
 							)}

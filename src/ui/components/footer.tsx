@@ -10,16 +10,16 @@ import { Logo } from "./shared/logo";
 // Default footer links when no CMS data is available
 const defaultFooterLinks = {
 	support: [
-		{ label: "Contact Us", href: "/contact" },
-		{ label: "FAQs", href: "/faq" },
-		{ label: "Shipping", href: "/shipping" },
-		{ label: "Returns", href: "/returns" },
+		{ label: "联系我们", href: "/contact" },
+		{ label: "常见问题", href: "/faq" },
+		{ label: "配送", href: "/shipping" },
+		{ label: "退货", href: "/returns" },
 	],
 	company: [
-		{ label: "About", href: "/about" },
-		{ label: "Sustainability", href: "/sustainability" },
-		{ label: "Careers", href: "/careers" },
-		{ label: "Press", href: "/press" },
+		{ label: "关于", href: "/about" },
+		{ label: "可持续发展", href: "/sustainability" },
+		{ label: "职业生涯", href: "/careers" },
+		{ label: "媒体", href: "/press" },
 	],
 };
 
@@ -72,7 +72,7 @@ export async function Footer({ channel }: { channel: string }) {
 							<Logo className="h-7 w-auto" inverted />
 						</Link>
 						<p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
-							Minimal design, maximum impact. Thoughtfully crafted essentials for everyday comfort.
+							极简设计，最大影响。为日常舒适精心打造的必需品。
 						</p>
 					</div>
 
@@ -144,7 +144,7 @@ export async function Footer({ channel }: { channel: string }) {
 					{menuItems.length === 0 && (
 						<>
 							<div>
-								<h4 className="mb-4 text-sm font-medium text-neutral-300">Support</h4>
+								<h4 className="mb-4 text-sm font-medium text-neutral-300">支持</h4>
 								<ul className="space-y-3">
 									{defaultFooterLinks.support.map((link) => (
 										<li key={link.href}>
@@ -160,7 +160,7 @@ export async function Footer({ channel }: { channel: string }) {
 								</ul>
 							</div>
 							<div>
-								<h4 className="mb-4 text-sm font-medium text-neutral-300">Company</h4>
+								<h4 className="mb-4 text-sm font-medium text-neutral-300">公司</h4>
 								<ul className="space-y-3">
 									{defaultFooterLinks.company.map((link) => (
 										<li key={link.href}>
@@ -183,7 +183,7 @@ export async function Footer({ channel }: { channel: string }) {
 				{channels?.channels && (
 					<div className="mt-8 text-neutral-400">
 						<label className="flex items-center gap-2 text-sm">
-							<span>Change currency:</span>
+							<span>更改货币：</span>
 							<ChannelSelect channels={channels.channels} />
 						</label>
 					</div>
@@ -200,14 +200,14 @@ export async function Footer({ channel }: { channel: string }) {
 							prefetch={false}
 							className="text-xs text-neutral-500 transition-colors hover:text-neutral-300"
 						>
-							Privacy Policy
+							隐私政策
 						</Link>
 						<Link
 							href="/terms"
 							prefetch={false}
 							className="text-xs text-neutral-500 transition-colors hover:text-neutral-300"
 						>
-							Terms of Service
+							服务条款
 						</Link>
 					</div>
 				</div>

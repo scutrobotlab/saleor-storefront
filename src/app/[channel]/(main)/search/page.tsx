@@ -8,8 +8,8 @@ import { SearchSort } from "./search-sort";
 import { SearchIcon } from "lucide-react";
 
 export const metadata = {
-	title: "Search products · Saleor Storefront example",
-	description: "Search products in Saleor Storefront example",
+	title: "搜索商品 · Saleor 店面示例",
+	description: "在 Saleor 店面示例中搜索商品",
 };
 
 type SearchParams = {
@@ -96,9 +96,9 @@ async function SearchContent({
 			{/* Header with count and sort */}
 			<div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
-					<h1 className="text-2xl font-semibold">Results for &quot;{query}&quot;</h1>
+					<h1 className="text-2xl font-semibold">&quot;{query}&quot; 的搜索结果</h1>
 					<p className="mt-1 text-sm text-muted-foreground">
-						{pagination.totalCount} {pagination.totalCount === 1 ? "product" : "products"} found
+						找到 {pagination.totalCount} {pagination.totalCount === 1 ? "件商品" : "件商品"}
 					</p>
 				</div>
 				<SearchSort />
@@ -157,23 +157,22 @@ function EmptyState({ query, channel }: { query: string; channel: string }) {
 			<div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
 				<SearchIcon className="h-8 w-8 text-muted-foreground" />
 			</div>
-			<h1 className="text-2xl font-semibold">No results for &quot;{query}&quot;</h1>
+			<h1 className="text-2xl font-semibold">没有找到 &quot;{query}&quot; 的结果</h1>
 			<p className="mt-2 max-w-md text-muted-foreground">
-				We couldn&apos;t find any products matching your search. Try a different term or browse our
-				categories.
+				我们未能找到与您的搜索匹配的任何商品。请尝试其他搜索词或浏览我们的分类。
 			</p>
 			<div className="mt-8 flex flex-col gap-3 sm:flex-row">
 				<Link
 					href={`/${channel}/products`}
 					className="hover:bg-primary/90 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors"
 				>
-					Browse All Products
+					浏览所有商品
 				</Link>
 				<Link
 					href={`/${channel}`}
 					className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
 				>
-					Go to Homepage
+					前往首页
 				</Link>
 			</div>
 		</div>

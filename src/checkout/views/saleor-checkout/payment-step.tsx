@@ -197,7 +197,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 						languageCode: localeConfig.graphqlLanguageCode,
 					});
 					if (result.error) {
-						setErrors({ streetAddress1: "Failed to update billing address" });
+						setErrors({ streetAddress1: "更新账单地址失败" });
 						return;
 					}
 					const billingErrors = result.data?.checkoutBillingAddressUpdate?.errors;
@@ -205,7 +205,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 						const errorMap: Record<string, string> = {};
 						billingErrors.forEach((err) => {
 							const field = err.field || "streetAddress1";
-							errorMap[field] = err.message || "Invalid value";
+							errorMap[field] = err.message || "无效值";
 						});
 						setErrors(errorMap);
 						const firstField = Object.keys(errorMap)[0];
@@ -253,14 +253,14 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 
 					if (initResult.error) {
 						console.error("Payment initialization error:", initResult.error);
-						setErrors({ streetAddress1: "Payment failed. Please try again." });
+						setErrors({ streetAddress1: "支付失败。请重试。" });
 						return;
 					}
 
 					const transactionErrors = initResult.data?.transactionInitialize?.errors;
 					if (transactionErrors?.length) {
 						console.error("Transaction errors:", transactionErrors);
-						setErrors({ streetAddress1: transactionErrors[0].message || "Payment failed" });
+						setErrors({ streetAddress1: transactionErrors[0].message || "支付失败" });
 						return;
 					}
 
@@ -271,7 +271,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 
 					if (completeResult.error) {
 						console.error("Checkout complete error:", completeResult.error);
-						setErrors({ streetAddress1: "Failed to complete order. Please try again." });
+						setErrors({ streetAddress1: "未能完成订单。请重试。" });
 						return;
 					}
 
@@ -281,7 +281,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 						console.error("Checkout complete errors:", errorDetails, completeErrors);
 						// Show a more descriptive error
 						const firstError = completeErrors[0];
-						const errorMessage = firstError.message || firstError.code || "Failed to complete order";
+						const errorMessage = firstError.message || firstError.code || "未能完成订单";
 						setErrors({ payment: errorMessage });
 						return;
 					}
@@ -296,16 +296,14 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				} else if (!hasRealGateway) {
 					// No payment gateway configured
 					setErrors({
-						streetAddress1:
-							"No payment gateway configured. Please contact support or configure a payment app in Saleor.",
+						streetAddress1: "未配置支付网关。请联系客服或在 Saleor 中配置支付应用。",
 					});
 					return;
 				} else {
 					// Real payment gateway - this UI doesn't support it yet
 					// For now, show an error
 					setErrors({
-						streetAddress1:
-							"This checkout UI currently only supports test payments. Please use the standard checkout for real payments.",
+						streetAddress1: "当前结账界面仅支持测试支付。请使用标准结账流程进行实际支付。",
 					});
 					return;
 				}
@@ -340,9 +338,9 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 	const isLoading = isProcessing || isPaymentProcessing;
 	const buttonText = isLoading
 		? completeState.fetching
-			? "Creating order..."
-			: "Processing payment..."
-		: `Pay ${totalStr}`;
+			? "正在创建订单..."
+			: "正在处理支付..."
+		: `支付 ${totalStr}`;
 
 	const isDisabled =
 		isLoading ||
@@ -359,10 +357,10 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				<div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
 					<AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
 					<div>
-						<p className="font-medium text-amber-800">No payment gateway configured</p>
+						<p className="font-medium text-amber-800">未配置支付网关</p>
 						<p className="mt-1 text-sm text-amber-700">
-							To accept payments, install a payment app (like Saleor Dummy Payment for testing, or
-							Stripe/Adyen for production) from the Saleor Dashboard.
+							要接受支付，请从 Saleor 后台安装支付应用（例如用于测试的 Saleor Dummy Payment，或用于生产环境的
+							Stripe/Adyen）。
 						</p>
 					</div>
 				</div>
@@ -373,10 +371,8 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				<div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
 					<AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
 					<div>
-						<p className="font-medium text-blue-800">Test Mode</p>
-						<p className="mt-1 text-sm text-blue-700">
-							Using test payment gateway. No real charges will be made.
-						</p>
+						<p className="font-medium text-blue-800">测试模式</p>
+						<p className="mt-1 text-sm text-blue-700">正在使用测试支付网关。不会产生实际费用。</p>
 					</div>
 				</div>
 			)}
@@ -407,7 +403,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				<div className="border-destructive/50 bg-destructive/10 flex items-start gap-3 rounded-lg border p-4">
 					<AlertCircle className="h-5 w-5 flex-shrink-0 text-destructive" />
 					<div>
-						<p className="font-medium text-destructive">Payment failed</p>
+						<p className="font-medium text-destructive">支付失败</p>
 						<p className="text-destructive/80 text-sm">{errors.payment}</p>
 					</div>
 				</div>
@@ -421,7 +417,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 					className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
 				>
 					<ChevronLeft className="h-4 w-4" />
-					{isShippingRequired ? "Return to shipping" : "Return to information"}
+					{isShippingRequired ? "返回配送" : "返回信息"}
 				</button>
 				<Button type="submit" disabled={isDisabled} className="hidden h-12 min-w-[200px] px-8 md:flex">
 					{isLoading ? (
@@ -443,7 +439,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				isLoading={isLoading}
 				disabled={isDisabled}
 				total={totalStr}
-				loadingText={completeState.fetching ? "Creating order..." : "Processing payment..."}
+				loadingText={completeState.fetching ? "正在创建订单..." : "正在处理支付..."}
 			/>
 		</form>
 	);

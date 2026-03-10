@@ -13,7 +13,7 @@ export const SearchBar = ({ channel }: { channel: string }) => {
 	return (
 		<form action={onSubmit} className="group relative w-full max-w-md">
 			<label className="relative block">
-				<span className="sr-only">Search for products</span>
+				<span className="sr-only">搜索商品</span>
 				{/* Search icon */}
 				<span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
 					<SearchIcon
@@ -25,7 +25,7 @@ export const SearchBar = ({ channel }: { channel: string }) => {
 				<input
 					type="text"
 					name="search"
-					placeholder="Search for products..."
+					placeholder="搜索商品..."
 					autoComplete="off"
 					required
 					className="hover:bg-secondary/80 focus:outline-hidden h-10 w-full rounded-lg border border-transparent bg-secondary py-2 pl-11 pr-4 text-sm text-foreground transition-all placeholder:text-muted-foreground hover:border-border focus:border-ring focus:bg-background focus:ring-1 focus:ring-ring"

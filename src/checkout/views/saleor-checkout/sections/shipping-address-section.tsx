@@ -67,7 +67,7 @@ export const ShippingAddressSection: FC<ShippingAddressSectionProps> = ({
 
 	return (
 		<section className="space-y-4">
-			<h2 className="text-xl font-semibold">Shipping address</h2>
+			<h2 className="text-xl font-semibold">收货地址</h2>
 
 			{showAddressList ? (
 				<>
@@ -76,9 +76,9 @@ export const ShippingAddressSection: FC<ShippingAddressSectionProps> = ({
 						selectedAddressId={selectedAddressId}
 						onSelectAddress={onSelectAddress}
 						defaultAddressId={defaultAddressId}
-						emptyMessage="You don't have any saved addresses yet. Please enter your shipping address below."
+						emptyMessage="您还没有保存任何地址。请在下方输入您的收货地址。"
 						addressType="SHIPPING"
-						sheetTitle="Select shipping address"
+						sheetTitle="选择收货地址"
 						onAddNew={() => onShowNewAddressForm(true)}
 					/>
 					{errors.address && <FieldError error={errors.address} />}
@@ -92,20 +92,20 @@ export const ShippingAddressSection: FC<ShippingAddressSectionProps> = ({
 							onClick={() => onShowNewAddressForm(false)}
 							className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground hover:no-underline"
 						>
-							← Back to saved addresses
+							← 返回已保存的地址
 						</button>
 					)}
 
 					{/* Country selector */}
 					<div className="space-y-2">
 						<Label htmlFor="country" className="text-sm font-medium">
-							Country/Region
+							国家/地区
 						</Label>
 						<FormSelect
 							id="country"
 							value={countryCode}
 							onChange={onCountryChange}
-							placeholder="Select country"
+							placeholder="选择国家"
 							autoComplete="country"
 							options={availableCountries.map((code) => ({
 								value: code,

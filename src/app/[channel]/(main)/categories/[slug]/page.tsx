@@ -46,7 +46,7 @@ export const generateMetadata = async (props: PageProps, parent: ResolvingMetada
 	const plainDescription = parseEditorJSToText(category?.description);
 
 	return {
-		title: `${category?.name || "Category"} | ${category?.seoTitle || (await parent).title?.absolute}`,
+		title: `${category?.name || "分类"} | ${category?.seoTitle || (await parent).title?.absolute}`,
 		description: category?.seoDescription || plainDescription || category?.seoTitle || category?.name,
 	};
 };
@@ -81,7 +81,7 @@ async function CategoryContent({
 	const plainDescription = parseEditorJSToText(category.description);
 
 	const breadcrumbs = [
-		{ label: "Home", href: `/${params.channel}` },
+		{ label: "首页", href: `/${params.channel}` },
 		{ label: category.name, href: `/${params.channel}/categories/${params.slug}` },
 	];
 

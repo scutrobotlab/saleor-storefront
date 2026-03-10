@@ -58,7 +58,7 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 			}
 
 			if (!selectedMethod) {
-				setError("Please select a shipping method");
+				setError("请选择配送方式");
 				// Focus the first radio option
 				const firstRadio = document.querySelector('input[name="shipping"]') as HTMLElement;
 				firstRadio?.focus();
@@ -82,7 +82,7 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 				});
 
 				if (result.error) {
-					setError("Failed to update shipping method");
+					setError("更新配送方式失败");
 					return;
 				}
 
@@ -94,7 +94,7 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 		[selectedMethod, currentMethodId, onNext, updateDeliveryMethod, checkout.id],
 	);
 
-	const buttonText = isSubmittingLocal ? "Saving..." : "Continue to payment";
+	const buttonText = isSubmittingLocal ? "正在保存..." : "继续支付";
 
 	return (
 		<form className="space-y-8" onSubmit={handleSubmit}>
@@ -103,23 +103,23 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 
 			{/* Shipping Methods */}
 			<section className="space-y-4">
-				<h2 className="text-lg font-semibold">Shipping method</h2>
+				<h2 className="text-lg font-semibold">配送方式</h2>
 
 				{error && <p className="text-sm text-destructive">{error}</p>}
 
 				{fetching ? (
 					<div className="flex items-center gap-3 rounded-lg border border-border p-4">
 						<div className="h-5 w-5 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
-						<p className="text-sm text-muted-foreground">Loading shipping methods...</p>
+						<p className="text-sm text-muted-foreground">正在加载配送方式...</p>
 					</div>
 				) : shippingMethods.length === 0 ? (
 					<div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
 						<p className="text-sm text-amber-800">
 							{!hasShippingAddress
-								? "Please go back and enter your shipping address first."
-								: `No shipping methods available for ${
-										checkout.shippingAddress?.country?.country || "your address"
-									}. Please check your address or contact support.`}
+								? "请返回并首先输入您的配送地址。"
+								: `对于 ${
+										checkout.shippingAddress?.country?.country || "您的地址"
+									} 暂无可用配送方式。请检查您的地址或联系客服。`}
 						</p>
 					</div>
 				) : (
@@ -167,13 +167,13 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 											<span className="font-medium">{method.name}</span>
 											{isEco && (
 												<span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
-													Eco
+													环保
 												</span>
 											)}
 										</div>
 										{method.minimumDeliveryDays && method.maximumDeliveryDays && (
 											<p className="text-sm text-muted-foreground">
-												{method.minimumDeliveryDays}-{method.maximumDeliveryDays} business days
+												{method.minimumDeliveryDays}-{method.maximumDeliveryDays} 个工作日
 											</p>
 										)}
 									</div>
@@ -193,7 +193,7 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 					className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
 				>
 					<ChevronLeft className="h-4 w-4" />
-					Return to information
+					返回信息
 				</button>
 				<Button
 					type="submit"
@@ -211,7 +211,7 @@ export const ShippingStep: FC<ShippingStepProps> = ({ checkout: initialCheckout,
 				onAction={handleSubmit}
 				isLoading={isSubmittingLocal}
 				disabled={!selectedMethod}
-				loadingText="Saving..."
+				loadingText="正在保存..."
 			/>
 		</form>
 	);

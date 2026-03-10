@@ -65,18 +65,16 @@ export const OrderConfirmation = () => {
 										</div>
 									</div>
 									<div>
-										<p className="text-muted-foreground">Order #{order.number}</p>
-										<h1 className="mt-1 text-2xl font-semibold">Thank you for your order!</h1>
+										<p className="text-muted-foreground">订单号 #{order.number}</p>
+										<h1 className="mt-1 text-2xl font-semibold">感谢您的订单！</h1>
 									</div>
 								</div>
 
 								{/* Order Confirmation Card */}
 								<div className="overflow-hidden rounded-lg border border-border">
 									<div className="bg-secondary/50 border-b border-border p-4">
-										<h2 className="font-semibold">Your order is confirmed</h2>
-										<p className="mt-1 text-sm text-muted-foreground">
-											You&apos;ll receive a confirmation email at {email}
-										</p>
+										<h2 className="font-semibold">您的订单已确认</h2>
+										<p className="mt-1 text-sm text-muted-foreground">您将在 {email} 收到一封确认邮件</p>
 									</div>
 
 									{/* Order Details */}
@@ -84,7 +82,7 @@ export const OrderConfirmation = () => {
 										<div className="flex items-start gap-3">
 											<Mail className="mt-0.5 h-5 w-5 text-muted-foreground" />
 											<div>
-												<p className="text-sm font-medium">Confirmation email sent</p>
+												<p className="text-sm font-medium">确认邮件已发送</p>
 												<p className="text-sm text-muted-foreground">{email}</p>
 											</div>
 										</div>
@@ -92,7 +90,7 @@ export const OrderConfirmation = () => {
 											<div className="flex items-start gap-3">
 												<MapPin className="mt-0.5 h-5 w-5 text-muted-foreground" />
 												<div>
-													<p className="text-sm font-medium">Shipping address</p>
+													<p className="text-sm font-medium">配送地址</p>
 													<p className="text-sm text-muted-foreground">{formatAddress(shippingAddress)}</p>
 												</div>
 											</div>
@@ -101,7 +99,7 @@ export const OrderConfirmation = () => {
 											<div className="flex items-start gap-3">
 												<CreditCard className="mt-0.5 h-5 w-5 text-muted-foreground" />
 												<div>
-													<p className="text-sm font-medium">Billing address</p>
+													<p className="text-sm font-medium">账单地址</p>
 													<p className="text-sm text-muted-foreground">{formatAddress(billingAddress)}</p>
 												</div>
 											</div>
@@ -109,7 +107,7 @@ export const OrderConfirmation = () => {
 										<div className="flex items-start gap-3">
 											<Package className="mt-0.5 h-5 w-5 text-muted-foreground" />
 											<div>
-												<p className="text-sm font-medium">Estimated delivery</p>
+												<p className="text-sm font-medium">预计送达时间</p>
 												<p className="text-sm text-muted-foreground">{formattedDelivery}</p>
 											</div>
 										</div>
@@ -122,7 +120,7 @@ export const OrderConfirmation = () => {
 										href={`/${channel}`}
 										className="inline-flex h-12 flex-1 items-center justify-center rounded-md border border-input bg-transparent px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										Continue shopping
+										继续购物
 									</Link>
 								</div>
 							</div>
