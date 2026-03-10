@@ -13,6 +13,8 @@ const config = {
 		// (max 3 concurrent requests + 200ms delay between requests)
 	},
 	images: {
+		// 允许从 localhost (127.0.0.1) 加载图片，解决本地开发时 Saleor API 媒体地址为 private IP 被拦截的问题
+		...(process.env.NODE_ENV === "development" && { dangerouslyAllowLocalIP: true }),
 		remotePatterns: [
 			{
 				// Saleor Cloud CDN
