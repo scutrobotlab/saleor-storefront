@@ -15,8 +15,61 @@ jobs:
     name: checkout and build
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: postgres:15-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres -d postgres || exit 1"
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      cache:
+        image: valkey/valkey:8.1-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping || exit 1"
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+      jaeger:
+        image: jaegertracing/jaeger
+        ports:
+          - "16686:16686"
+          - "4317:4317"
+          - "4318:4318"
+      api:
+        image: ghcr.io/scutrobotlab/saleor:unstable-main
+        ports:
+          - 8000:8000
+        env:
+          DEFAULT_CHANNEL_SLUG: default-channel
+          HTTP_IP_FILTER_ALLOW_LOOPBACK_IPS: "True"
+          HTTP_IP_FILTER_ENABLED: "False"
+          CACHE_URL: redis://cache:6379/0
+          CELERY_BROKER_URL: redis://cache:6379/1
+          DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+          DEFAULT_FROM_EMAIL: noreply@example.com
+          EMAIL_URL: smtp://mailpit:1025
+          SECRET_KEY: changeme
+          OTEL_SERVICE_NAME: saleor
+          OTEL_TRACES_EXPORTER: otlp
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+          ALLOWED_HOSTS: localhost,127.0.0.1,api
+
     steps:
       - uses: actions/checkout@v6
+
+      - name: Checkout backend
+        uses: actions/checkout@v6
+        with:
+          repository: scutrobotlab/saleor
+          path: saleor
 
       - uses: docker/setup-buildx-action@v3
 
@@ -27,11 +80,42 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Start Saleor API
+        run: |
+          docker run -d --name api --network host \
+            -e DEFAULT_CHANNEL_SLUG=default-channel \
+            -e HTTP_IP_FILTER_ALLOW_LOOPBACK_IPS=True \
+            -e HTTP_IP_FILTER_ENABLED=False \
+            -e CACHE_URL=redis://cache:6379/0 \
+            -e CELERY_BROKER_URL=redis://cache:6379/1 \
+            -e DATABASE_URL=postgres://postgres:postgres@db:5432/postgres \
+            -e DEFAULT_FROM_EMAIL=noreply@example.com \
+            -e EMAIL_URL=smtp://mailpit:1025 \
+            -e SECRET_KEY=changeme \
+            -e OTEL_SERVICE_NAME=saleor \
+            -e OTEL_TRACES_EXPORTER=otlp \
+            -e OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317 \
+            -e ALLOWED_HOSTS=localhost,127.0.0.1,api \
+            ghcr.io/scutrobotlab/saleor:unstable-main
+
+      - name: Initialize Saleor Database
+        run: |
+          docker exec api python manage.py migrate
+          docker exec api python manage.py populatedb
+          curl -I http://localhost:8000/graphql/
+
       - name: Build and Push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
+          network: host
+          add-hosts: |
+            api:host-gateway
+          build-args: |
+            NEXT_PUBLIC_SALEOR_API_URL=http://api:8000/graphql/
+            NEXT_PUBLIC_DEFAULT_CHANNEL=default-channel
+            NEXT_PUBLIC_STOREFRONT_URL=https://store.scutbot.cn
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
             ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
