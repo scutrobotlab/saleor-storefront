@@ -1,4 +1,4 @@
-/** Payment components: method selection, card form, billing address. */
+/** Payment components: method selection, card form, billing address, WeChat pay. */
 
 export {
 	PaymentMethodSelector,
@@ -14,3 +14,5 @@ export {
 	type BillingAddressData,
 	type BillingAddressSectionProps,
 } from "./billing-address-section";
+
+export { WechatPayment, type WechatPaymentData } from "./wechat-payment";
