@@ -18,12 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Checkout backend
-        uses: actions/checkout@v6
-        with:
-          repository: scutrobotlab/saleor
-          path: saleor
-
       - name: Checkout platform
         uses: actions/checkout@v6
         with:
