@@ -2,11 +2,17 @@
 
 import { useState, type FC } from "react";
 import Image from "next/image";
-import { Tag, ShieldCheck, RotateCcw, Truck, ChevronDown, ShoppingBag } from "lucide-react";
+import { Tag, ShieldCheck, RotateCcw, Truck, ChevronDown, ShoppingBag, X } from "lucide-react";
 import { Button } from "@/ui/components/ui/button";
 import { Input } from "@/ui/components/ui/input";
 import { cn } from "@/lib/utils";
-import { type CheckoutFragment, type OrderFragment } from "@/checkout/graphql";
+import {
+	type CheckoutFragment,
+	type OrderFragment,
+	useCheckoutAddPromoCodeMutation,
+	useCheckoutRemovePromoCodeMutation,
+} from "@/checkout/graphql";
+import { useCheckout } from "@/checkout/hooks/use-checkout";
 import { localeConfig } from "@/config/locale";
 
 // ============================================================================
@@ -113,11 +119,21 @@ function extractOrderData(order: OrderFragment): OrderSummaryData {
 // Component
 // ============================================================================
 
+const PROMO_ERROR_MESSAGES: Record<string, string> = {
+	INVALID: "折扣码无效",
+	VOUCHER_NOT_APPLICABLE: "该折扣码不适用于当前订单",
+};
+
 export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable }) => {
 	const [promoCode, setPromoCode] = useState("");
-	const [promoApplied, setPromoApplied] = useState(false);
+	const [promoError, setPromoError] = useState<string | null>(null);
 	// Collapsed by default on mobile
 	const [isExpanded, setIsExpanded] = useState(false);
+
+	const { refetch } = useCheckout();
+	const [{ fetching: addingPromo }, addPromoCode] = useCheckoutAddPromoCodeMutation();
+	const [{ fetching: removingPromo }, removePromoCode] = useCheckoutRemovePromoCodeMutation();
+	const promoLoading = addingPromo || removingPromo;
 
 	// Extract data from either checkout or order
 	const data = checkout ? extractCheckoutData(checkout) : order ? extractOrderData(order) : null;
@@ -129,6 +145,9 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 	const { lines, currency, subtotal, shipping, tax, discount, total } = data;
 	const isEditable = editable ?? data.editable;
 	const itemCount = lines.reduce((acc, line) => acc + line.quantity, 0);
+	const hasVoucher = Boolean(checkout?.voucherCode);
+	const appliedVoucherLabel =
+		checkout?.translatedDiscountName || checkout?.discountName || checkout?.voucherCode || "";
 
 	const formatMoney = (amount: number) => {
 		return new Intl.NumberFormat(localeConfig.default, {
@@ -137,11 +156,33 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 		}).format(amount);
 	};
 
-	const handleApplyPromo = () => {
-		// TODO: Call Saleor mutation to apply promo code
-		if (promoCode.toLowerCase() === "saleor10") {
-			setPromoApplied(true);
+	const handleApplyPromo = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!checkout?.id || !promoCode.trim()) return;
+		setPromoError(null);
+		const result = await addPromoCode({
+			checkoutId: checkout.id,
+			promoCode: promoCode.trim(),
+			languageCode: localeConfig.graphqlLanguageCode,
+		});
+		const errors = result.data?.checkoutAddPromoCode?.errors;
+		if (errors?.length) {
+			const code = errors[0].code;
+			setPromoError(PROMO_ERROR_MESSAGES[code] ?? errors[0].message ?? "应用折扣码失败");
+			return;
 		}
+		setPromoCode("");
+		refetch();
+	};
+
+	const handleRemovePromo = async () => {
+		if (!checkout?.id || !checkout.voucherCode) return;
+		await removePromoCode({
+			checkoutId: checkout.id,
+			promoCode: checkout.voucherCode,
+			languageCode: localeConfig.graphqlLanguageCode,
+		});
+		refetch();
 	};
 
 	// Product thumbnails for collapsed state (show max 2 for cleaner look)
@@ -274,34 +315,52 @@ export const OrderSummary: FC<OrderSummaryProps> = ({ checkout, order, editable 
 					{/* Discounts - only for editable checkout */}
 					{isEditable && (
 						<section className="border-t border-border px-5 py-4">
-							<form
-								className="flex gap-2"
-								onSubmit={(e) => {
-									e.preventDefault();
-									handleApplyPromo();
-								}}
-							>
-								<div className="relative flex-1">
-									<Tag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-									<Input
-										placeholder="折扣码"
-										value={promoCode}
-										onChange={(e) => setPromoCode(e.target.value)}
-										className="h-10 bg-white pl-10 text-sm"
-										disabled={promoApplied}
-									/>
+							{hasVoucher ? (
+								<div className="flex items-center justify-between gap-2 rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">
+									<span className="font-medium">{appliedVoucherLabel} - 已应用</span>
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										disabled={promoLoading}
+										onClick={handleRemovePromo}
+										className="h-8 gap-1 text-green-700 hover:bg-green-100 hover:text-green-900"
+									>
+										<X className="h-3.5 w-3.5" />
+										移除
+									</Button>
 								</div>
-								<Button
-									type="submit"
-									variant="outline-solid"
-									disabled={!promoCode || promoApplied}
-									className="h-10 bg-white px-4 text-sm"
-								>
-									{promoApplied ? "已应用" : "应用"}
-								</Button>
-							</form>
-							{promoApplied && (
-								<p className="mt-2 text-sm font-medium text-green-600">SALEOR10 - 已应用10%折扣</p>
+							) : (
+								<form className="flex flex-col gap-2" onSubmit={handleApplyPromo}>
+									<div className="flex gap-2">
+										<div className="relative flex-1">
+											<Tag className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+											<Input
+												placeholder="折扣码"
+												value={promoCode}
+												onChange={(e) => {
+													setPromoCode(e.target.value);
+													setPromoError(null);
+												}}
+												className="h-10 bg-white pl-10 text-sm"
+												disabled={promoLoading}
+											/>
+										</div>
+										<Button
+											type="submit"
+											variant="outline-solid"
+											disabled={!promoCode.trim() || promoLoading}
+											className="h-10 bg-white px-4 text-sm"
+										>
+											{promoLoading ? "处理中…" : "应用"}
+										</Button>
+									</div>
+									{promoError && (
+										<p className="text-sm text-destructive" role="alert">
+											{promoError}
+										</p>
+									)}
+								</form>
 							)}
 						</section>
 					)}
