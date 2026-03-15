@@ -10,24 +10,54 @@ interface ErrorPageProps {
 	reset: () => void;
 }
 
+/** 判断是否为登录态过期/未授权（401/403 或相关文案），应跳转登录而非展示错误页 */
+function isAuthExpiredError(error: Error & { statusCode?: number }): boolean {
+	const code = (error as { statusCode?: number }).statusCode;
+	if (code === 401 || code === 403) return true;
+	const msg = (error?.message ?? "").toLowerCase();
+	return (
+		/unauthorized|permission denied|token|expired|认证|登录|权限|invalid.*auth/i.test(msg) ||
+		msg.includes("401") ||
+		msg.includes("403")
+	);
+}
+
+/** 从当前 pathname 解析 channel（如 /channel-cny/account -> channel-cny） */
+function getChannelFromPathname(): string {
+	if (typeof window === "undefined") return "default-channel";
+	const segments = window.location.pathname.split("/").filter(Boolean);
+	return segments[0] ?? "default-channel";
+}
+
 /**
  * Global error page for uncaught errors.
  *
- * Displays user-friendly messages based on error type.
- * Technical details are logged but not shown to users in production.
+ * 登录态过期时自动跳转登录页，不展示「发生错误」。
  */
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
-	// Log error for debugging (server-side in production)
+	const saleorError = error as SaleorError & { statusCode?: number };
+	const isAuthExpired = isAuthExpiredError(saleorError);
+
+	// 登录态过期：静默跳转登录页，不显示错误内容
 	useEffect(() => {
 		console.error("[Error Page]", error);
-	}, [error]);
+		if (isAuthExpired) {
+			const channel = getChannelFromPathname();
+			window.location.replace(`/${channel}/login`);
+		}
+	}, [error, isAuthExpired]);
+
+	if (isAuthExpired) {
+		return (
+			<div className="flex min-h-[50vh] flex-col items-center justify-center px-4 py-16">
+				<p className="text-muted-foreground">登录已过期，正在跳转到登录页…</p>
+			</div>
+		);
+	}
 
 	// Extract error info
-	const saleorError = error as SaleorError;
 	const isRetryable = saleorError.isRetryable ?? true;
 	const userMessage = saleorError.userMessage ?? "加载此页面时出现问题。";
-
-	// Determine icon and action based on error type
 	const errorType = saleorError.type ?? "unknown";
 
 	const buttonBase =
