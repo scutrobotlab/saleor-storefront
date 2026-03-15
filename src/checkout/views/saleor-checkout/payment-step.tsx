@@ -27,10 +27,8 @@ import { WechatPayment, type WechatPaymentData } from "@/checkout/components/pay
 import { LoadingSpinner } from "@/checkout/ui-kit/loading-spinner";
 import { formatMoneyWithFallback } from "@/checkout/lib/utils/money";
 
-/** Z-Pay App ID registered in Saleor */
+/** Z-Pay App ID registered in Saleor（当前仅支持微信支付） */
 const ZPAY_GATEWAY_ID = "saleor-payment-zpay";
-/** Fallback test gateway */
-const DUMMY_GATEWAY_ID = "mirumee.payments.dummy";
 
 interface PaymentStepProps {
 	checkout: CheckoutFragment;
@@ -113,11 +111,10 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 	const [transactionState, transactionInitialize] = useTransactionInitializeMutation();
 	const [completeState, checkoutComplete] = useCheckoutCompleteMutation();
 
-	// Check for available payment gateways
+	// 仅支持微信支付（Z-Pay），不展示其他支付能力
 	const availableGateways = checkout.availablePaymentGateways || [];
 	const hasZpayGateway = availableGateways.some((g) => g.id === ZPAY_GATEWAY_ID);
-	const hasDummyGateway = availableGateways.some((g) => g.id === DUMMY_GATEWAY_ID);
-	const hasAnyGateway = hasZpayGateway || hasDummyGateway;
+	const hasAnyGateway = hasZpayGateway;
 
 	/** Detect mobile browser for H5 vs QR code decision */
 	const isMobile =
@@ -250,63 +247,40 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 					return;
 				}
 
-				if (hasZpayGateway) {
-					// WeChat Pay via Z-Pay App
-					const initResult = await transactionInitialize({
-						checkoutId: checkout.id,
-						paymentGateway: {
-							id: ZPAY_GATEWAY_ID,
-							data: {
-								device: isMobile ? "mobile" : "pc",
-								clientIp: "unknown",
-							},
+				// 仅使用微信支付（Z-Pay）
+				const initResult = await transactionInitialize({
+					checkoutId: checkout.id,
+					paymentGateway: {
+						id: ZPAY_GATEWAY_ID,
+						data: {
+							device: isMobile ? "mobile" : "pc",
+							clientIp: "unknown",
 						},
-					});
+					},
+				});
 
-					if (initResult.error || initResult.data?.transactionInitialize?.errors?.length) {
-						const msg = initResult.data?.transactionInitialize?.errors?.[0]?.message ?? "支付初始化失败";
-						setErrors({ payment: msg });
-						return;
-					}
-
-					const txData = initResult.data?.transactionInitialize;
-					const txId = txData?.transaction?.id;
-					const eventType = txData?.transactionEvent?.type;
-					const payData = txData?.data as WechatPaymentData | null;
-
-					if (eventType === "CHARGE_ACTION_REQUIRED" && txId && payData) {
-						// Show QR / redirect to H5 — payment not yet complete
-						setWechatData({ transactionId: txId, payData });
-						return;
-					}
-
-					if (eventType === "CHARGE_SUCCESS") {
-						await handlePaymentConfirmed();
-						return;
-					}
-
-					setErrors({ payment: txData?.transactionEvent?.message ?? "支付失败" });
+				if (initResult.error || initResult.data?.transactionInitialize?.errors?.length) {
+					const msg = initResult.data?.transactionInitialize?.errors?.[0]?.message ?? "支付初始化失败";
+					setErrors({ payment: msg });
 					return;
 				}
 
-				if (hasDummyGateway) {
-					// Test / development path
-					const initResult = await transactionInitialize({
-						checkoutId: checkout.id,
-						paymentGateway: {
-							id: DUMMY_GATEWAY_ID,
-							data: { event: { includePspReference: true, type: "CHARGE_SUCCESS" } },
-						},
-					});
+				const txData = initResult.data?.transactionInitialize;
+				const txId = txData?.transaction?.id;
+				const eventType = txData?.transactionEvent?.type;
+				const payData = txData?.data as WechatPaymentData | null;
 
-					if (initResult.error || initResult.data?.transactionInitialize?.errors?.length) {
-						setErrors({ payment: "支付失败，请重试。" });
-						return;
-					}
+				if (eventType === "CHARGE_ACTION_REQUIRED" && txId && payData) {
+					setWechatData({ transactionId: txId, payData });
+					return;
+				}
 
+				if (eventType === "CHARGE_SUCCESS") {
 					await handlePaymentConfirmed();
 					return;
 				}
+
+				setErrors({ payment: txData?.transactionEvent?.message ?? "支付失败" });
 			} finally {
 				setIsProcessing(false);
 			}
@@ -318,8 +292,6 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 			user?.addresses,
 			shippingAddress,
 			checkout.id,
-			hasZpayGateway,
-			hasDummyGateway,
 			hasAnyGateway,
 			isMobile,
 			updateBillingAddress,
@@ -389,18 +361,7 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 				</div>
 			)}
 
-			{/* Test Mode Indicator */}
-			{hasDummyGateway && !hasZpayGateway && (
-				<div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
-					<AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-					<div>
-						<p className="font-medium text-blue-800">测试模式</p>
-						<p className="mt-1 text-sm text-blue-700">正在使用测试支付网关，不会产生实际费用。</p>
-					</div>
-				</div>
-			)}
-
-			{/* WeChat Pay method card */}
+			{/* WeChat Pay method card（仅支持微信支付） */}
 			{hasZpayGateway && (
 				<section className="space-y-3">
 					<h2 className="text-lg font-semibold">支付方式</h2>
