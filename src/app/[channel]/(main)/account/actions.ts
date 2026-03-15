@@ -187,6 +187,7 @@ function extractAddressInput(formData: FormData): AddressInput {
 		streetAddress1: getFormStringOptional(formData, "streetAddress1"),
 		streetAddress2: getFormStringOptional(formData, "streetAddress2"),
 		city: getFormStringOptional(formData, "city"),
+		cityArea: getFormStringOptional(formData, "cityArea"),
 		postalCode: getFormStringOptional(formData, "postalCode"),
 		countryArea: getFormStringOptional(formData, "countryArea"),
 		country: getFormStringOptional(formData, "country") as CountryCode | undefined,

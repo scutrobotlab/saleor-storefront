@@ -15,10 +15,147 @@ import {
 	SheetCloseButton,
 } from "@/ui/components/ui/sheet";
 import { createAddress, updateAddress } from "@/app/[channel]/(main)/account/actions";
+import { CHINA_PROVINCES, isChinaMunicipalityOrSAR } from "@/checkout/lib/consts/china-provinces";
 
 type Props = {
 	address?: AddressDetailsFragment;
 };
+
+function getInitialCity(countryArea: string, address?: AddressDetailsFragment | null): string {
+	if (address?.city) return address.city;
+	if (countryArea && isChinaMunicipalityOrSAR(countryArea)) return countryArea;
+	return "";
+}
+
+type FormFieldsProps = {
+	address?: AddressDetailsFragment | null;
+	isEditing: boolean;
+	error: string;
+	isPending: boolean;
+	onSubmit: (formData: FormData) => void;
+};
+
+function AddressFormFields({ address, isEditing, error, isPending, onSubmit }: FormFieldsProps) {
+	const area0 = address?.countryArea ?? "";
+	const [countryArea, setCountryArea] = useState(area0);
+	const [city, setCity] = useState(() => getInitialCity(area0, address));
+
+	const isCityLocked = isChinaMunicipalityOrSAR(countryArea);
+	const handleCountryAreaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const v = e.target.value;
+		setCountryArea(v);
+		if (isChinaMunicipalityOrSAR(v)) setCity(v);
+	};
+
+	return (
+		<form action={onSubmit} className="space-y-4">
+			{isEditing && address && <input type="hidden" name="id" value={address.id} />}
+			<input type="hidden" name="country" value="CN" />
+			<input type="hidden" name="lastName" value="" />
+
+			{error && (
+				<p role="alert" className="text-sm text-destructive">
+					{error}
+				</p>
+			)}
+
+			<div className="space-y-1.5">
+				<Label htmlFor="addr-firstName">收件人</Label>
+				<Input
+					id="addr-firstName"
+					name="firstName"
+					autoComplete="name"
+					defaultValue={(address?.firstName ?? "") + (address?.lastName ?? "")}
+					placeholder="请输入姓名"
+					required
+				/>
+			</div>
+
+			<div className="space-y-1.5">
+				<Label htmlFor="addr-phone">手机号</Label>
+				<Input
+					id="addr-phone"
+					name="phone"
+					type="tel"
+					autoComplete="tel"
+					defaultValue={address?.phone ?? ""}
+					placeholder="手机号"
+					required
+				/>
+			</div>
+
+			<div className="space-y-1.5">
+				<Label htmlFor="addr-countryArea">省 / 直辖市 / 自治区</Label>
+				<select
+					id="addr-countryArea"
+					name="countryArea"
+					autoComplete="address-level1"
+					value={countryArea}
+					onChange={handleCountryAreaChange}
+					required
+					className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					<option value="" disabled>
+						请选择省份
+					</option>
+					{CHINA_PROVINCES.map((p) => (
+						<option key={p.value} value={p.value}>
+							{p.label}
+						</option>
+					))}
+				</select>
+			</div>
+
+			<div className="grid gap-4 sm:grid-cols-2">
+				<div className="space-y-1.5">
+					<Label htmlFor="addr-city">市</Label>
+					{isCityLocked && <input type="hidden" name="city" value={countryArea} />}
+					<Input
+						id="addr-city"
+						name={isCityLocked ? undefined : "city"}
+						autoComplete="address-level2"
+						value={isCityLocked ? countryArea : city}
+						onChange={(e) => setCity(e.target.value)}
+						placeholder="市"
+						required
+						disabled={isCityLocked}
+						className="disabled:cursor-not-allowed disabled:opacity-70"
+					/>
+				</div>
+				<div className="space-y-1.5">
+					<Label htmlFor="addr-cityArea">
+						区 / 县 <span className="text-xs font-normal text-muted-foreground">(可选)</span>
+					</Label>
+					<Input
+						id="addr-cityArea"
+						name="cityArea"
+						autoComplete="address-level3"
+						defaultValue={(address as (typeof address & { cityArea?: string }) | undefined)?.cityArea ?? ""}
+						placeholder="区 / 县（可选）"
+					/>
+				</div>
+			</div>
+
+			<div className="space-y-1.5">
+				<Label htmlFor="addr-streetAddress1">详细地址</Label>
+				<Input
+					id="addr-streetAddress1"
+					name="streetAddress1"
+					autoComplete="address-line1"
+					defaultValue={address?.streetAddress1}
+					placeholder="街道、门牌号、楼层等"
+					required
+				/>
+			</div>
+
+			<div className="flex gap-2 pt-2">
+				<Button type="submit" disabled={isPending} className="flex-1">
+					{isPending ? "保存中…" : isEditing ? "更新地址" : "添加地址"}
+				</Button>
+			</div>
+		</form>
+	);
+}
 
 export function AddressFormDialog({ address }: Props) {
 	const [open, setOpen] = useState(false);
@@ -65,134 +202,16 @@ export function AddressFormDialog({ address }: Props) {
 						</SheetDescription>
 						<SheetCloseButton />
 					</SheetHeader>
-
-					<form action={handleSubmit} className="space-y-4">
-						{isEditing && <input type="hidden" name="id" value={address.id} />}
-
-						{error && (
-							<p role="alert" className="text-sm text-destructive">
-								{error}
-							</p>
-						)}
-
-						<div className="grid gap-4 sm:grid-cols-2">
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-firstName">名</Label>
-								<Input
-									id="addr-firstName"
-									name="firstName"
-									autoComplete="given-name"
-									defaultValue={address?.firstName}
-									required
-								/>
-							</div>
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-lastName">姓</Label>
-								<Input
-									id="addr-lastName"
-									name="lastName"
-									autoComplete="family-name"
-									defaultValue={address?.lastName}
-									required
-								/>
-							</div>
-						</div>
-
-						<div className="space-y-1.5">
-							<Label htmlFor="addr-companyName">公司（可选）</Label>
-							<Input
-								id="addr-companyName"
-								name="companyName"
-								autoComplete="organization"
-								defaultValue={address?.companyName}
-							/>
-						</div>
-
-						<div className="space-y-1.5">
-							<Label htmlFor="addr-streetAddress1">街道地址</Label>
-							<Input
-								id="addr-streetAddress1"
-								name="streetAddress1"
-								autoComplete="address-line1"
-								defaultValue={address?.streetAddress1}
-								required
-							/>
-						</div>
-
-						<div className="space-y-1.5">
-							<Label htmlFor="addr-streetAddress2">公寓、套房等（可选）</Label>
-							<Input
-								id="addr-streetAddress2"
-								name="streetAddress2"
-								autoComplete="address-line2"
-								defaultValue={address?.streetAddress2}
-							/>
-						</div>
-
-						<div className="grid gap-4 sm:grid-cols-2">
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-city">城市</Label>
-								<Input
-									id="addr-city"
-									name="city"
-									autoComplete="address-level2"
-									defaultValue={address?.city}
-									required
-								/>
-							</div>
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-postalCode">邮政编码</Label>
-								<Input
-									id="addr-postalCode"
-									name="postalCode"
-									autoComplete="postal-code"
-									defaultValue={address?.postalCode}
-									required
-								/>
-							</div>
-						</div>
-
-						<div className="grid gap-4 sm:grid-cols-2">
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-countryArea">州/省</Label>
-								<Input
-									id="addr-countryArea"
-									name="countryArea"
-									autoComplete="address-level1"
-									defaultValue={address?.countryArea}
-								/>
-							</div>
-							<div className="space-y-1.5">
-								<Label htmlFor="addr-country">国家代码</Label>
-								<Input
-									id="addr-country"
-									name="country"
-									autoComplete="country"
-									defaultValue={address?.country.code}
-									placeholder="US"
-									maxLength={2}
-									required
-								/>
-							</div>
-						</div>
-
-						<div className="space-y-1.5">
-							<Label htmlFor="addr-phone">电话（可选）</Label>
-							<Input
-								id="addr-phone"
-								name="phone"
-								type="tel"
-								autoComplete="tel"
-								defaultValue={address?.phone ?? ""}
-							/>
-						</div>
-
-						<div className="flex gap-2 pt-2">
-							<Button type="submit" disabled={isPending} className="flex-1">
-								{isPending ? "保存中…" : isEditing ? "更新地址" : "添加地址"}
-							</Button>
-						</div>
-					</form>
+					{open && (
+						<AddressFormFields
+							key={address?.id ?? "new"}
+							address={address}
+							isEditing={isEditing}
+							error={error}
+							isPending={isPending}
+							onSubmit={handleSubmit}
+						/>
+					)}
 				</SheetContent>
 			</Sheet>
 		</>

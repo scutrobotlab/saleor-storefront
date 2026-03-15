@@ -11,6 +11,11 @@ import { useAvailableShippingCountries } from "@/checkout/hooks/use-available-sh
 import { getCountryName } from "@/checkout/lib/utils/locale";
 import { useAddressFormUtils } from "@/checkout/components/address-form/use-address-form-utils";
 import { HybridAddressSelector } from "@/checkout/components/shipping-address";
+import { useChinaAddressForm } from "@/checkout/lib/use-china-address-form";
+import {
+	ChinaAddressFields,
+	type ChinaAddressFormData,
+} from "@/checkout/components/address-form/china-address-fields";
 
 export interface BillingAddressData {
 	countryCode: CountryCode;
@@ -76,6 +81,7 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 	initialSameAsShipping,
 }) => {
 	const { availableShippingCountries } = useAvailableShippingCountries();
+	const useChinaForm = useChinaAddressForm();
 
 	const hasShippingAddress = !!shippingAddress;
 	const hasSavedAddresses = userAddresses.length > 0;
@@ -93,9 +99,11 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 		billingAddress?.id || defaultBillingAddressId || (userAddresses.length > 0 ? userAddresses[0].id : null),
 	);
 
+	// 中国模式固定 CN；否则从账单地址或默认回退（用派生值避免在 effect 内 setState）
 	const [countryCode, setCountryCode] = useState<CountryCode>(
-		(billingAddress?.country?.code as CountryCode) || "US",
+		useChinaForm ? "CN" : (billingAddress?.country?.code as CountryCode) || "US",
 	);
+	const effectiveCountryCode = useChinaForm ? ("CN" as CountryCode) : countryCode;
 
 	const [formData, setFormData] = useState<Record<string, string>>({
 		firstName: billingAddress?.firstName || "",
@@ -110,17 +118,17 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 	});
 
 	const { orderedAddressFields, getFieldLabel, isRequiredField, countryAreaChoices } =
-		useAddressFormUtils(countryCode);
+		useAddressFormUtils(effectiveCountryCode);
 
 	// Notify parent of changes
 	useEffect(() => {
 		// If using saved address, pass the selectedAddressId
 		if (hasSavedAddresses && !showNewAddressForm && selectedAddressId) {
-			onChange({ countryCode, formData, selectedAddressId });
+			onChange({ countryCode: effectiveCountryCode, formData, selectedAddressId });
 		} else {
-			onChange({ countryCode, formData, selectedAddressId: null });
+			onChange({ countryCode: effectiveCountryCode, formData, selectedAddressId: null });
 		}
-	}, [countryCode, formData, selectedAddressId, hasSavedAddresses, showNewAddressForm, onChange]);
+	}, [effectiveCountryCode, formData, selectedAddressId, hasSavedAddresses, showNewAddressForm, onChange]);
 
 	const handleSameAsShippingChange = (checked: boolean) => {
 		setSameAsBilling(checked);
@@ -132,7 +140,8 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 		// Also populate formData from the selected address (for potential editing)
 		const address = userAddresses.find((a) => a.id === id);
 		if (address) {
-			setCountryCode((address.country?.code as CountryCode) || "US");
+			// 中国模式固定 CN，不用已保存地址的国家覆盖
+			setCountryCode(useChinaForm ? "CN" : (address.country?.code as CountryCode) || "US");
 			setFormData({
 				firstName: address.firstName || "",
 				lastName: address.lastName || "",
@@ -199,35 +208,46 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 										<ChevronLeft className="h-4 w-4" /> 返回已保存地址
 									</button>
 
-									{/* Country selector */}
-									<div className="space-y-2">
-										<Label htmlFor="billing-country" className="text-sm font-medium">
-											国家/地区
-										</Label>
-										<FormSelect
-											id="billing-country"
-											value={countryCode}
-											onChange={handleCountryChange}
-											placeholder="选择国家"
-											autoComplete="country"
-											options={availableShippingCountries.map((code) => ({
-												value: code,
-												label: getCountryName(code),
-											}))}
+									{useChinaForm ? (
+										<ChinaAddressFields
+											formData={formData as unknown as ChinaAddressFormData}
+											errors={errors}
+											onChange={updateField}
+											idPrefix="billing-"
 										/>
-									</div>
+									) : (
+										<>
+											{/* Country selector */}
+											<div className="space-y-2">
+												<Label htmlFor="billing-country" className="text-sm font-medium">
+													国家/地区
+												</Label>
+												<FormSelect
+													id="billing-country"
+													value={effectiveCountryCode}
+													onChange={handleCountryChange}
+													placeholder="选择国家"
+													autoComplete="country"
+													options={availableShippingCountries.map((code) => ({
+														value: code,
+														label: getCountryName(code),
+													}))}
+												/>
+											</div>
 
-									{/* Dynamic address fields */}
-									<AddressFields
-										orderedFields={orderedAddressFields}
-										getFieldLabel={getFieldLabel}
-										isRequiredField={isRequiredField}
-										formData={formData}
-										errors={errors}
-										onFieldChange={updateField}
-										countryAreaChoices={countryAreaChoices}
-										idPrefix="billing-"
-									/>
+											{/* Dynamic address fields */}
+											<AddressFields
+												orderedFields={orderedAddressFields}
+												getFieldLabel={getFieldLabel}
+												isRequiredField={isRequiredField}
+												formData={formData}
+												errors={errors}
+												onFieldChange={updateField}
+												countryAreaChoices={countryAreaChoices}
+												idPrefix="billing-"
+											/>
+										</>
+									)}
 								</>
 							) : (
 								<>
@@ -266,35 +286,46 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 					) : (
 						<>
 							{/* Guest user: always show form */}
-							{/* Country selector */}
-							<div className="space-y-2">
-								<Label htmlFor="billing-country" className="text-sm font-medium">
-									国家/地区
-								</Label>
-								<FormSelect
-									id="billing-country"
-									value={countryCode}
-									onChange={handleCountryChange}
-									placeholder="选择国家"
-									autoComplete="country"
-									options={availableShippingCountries.map((code) => ({
-										value: code,
-										label: getCountryName(code),
-									}))}
+							{useChinaForm ? (
+								<ChinaAddressFields
+									formData={formData as unknown as ChinaAddressFormData}
+									errors={errors}
+									onChange={updateField}
+									idPrefix="billing-"
 								/>
-							</div>
+							) : (
+								<>
+									{/* Country selector */}
+									<div className="space-y-2">
+										<Label htmlFor="billing-country" className="text-sm font-medium">
+											国家/地区
+										</Label>
+										<FormSelect
+											id="billing-country"
+											value={effectiveCountryCode}
+											onChange={handleCountryChange}
+											placeholder="选择国家"
+											autoComplete="country"
+											options={availableShippingCountries.map((code) => ({
+												value: code,
+												label: getCountryName(code),
+											}))}
+										/>
+									</div>
 
-							{/* Dynamic address fields */}
-							<AddressFields
-								orderedFields={orderedAddressFields}
-								getFieldLabel={getFieldLabel}
-								isRequiredField={isRequiredField}
-								formData={formData}
-								errors={errors}
-								onFieldChange={updateField}
-								countryAreaChoices={countryAreaChoices}
-								idPrefix="billing-"
-							/>
+									{/* Dynamic address fields */}
+									<AddressFields
+										orderedFields={orderedAddressFields}
+										getFieldLabel={getFieldLabel}
+										isRequiredField={isRequiredField}
+										formData={formData}
+										errors={errors}
+										onFieldChange={updateField}
+										countryAreaChoices={countryAreaChoices}
+										idPrefix="billing-"
+									/>
+								</>
+							)}
 						</>
 					)}
 				</div>
@@ -305,17 +336,29 @@ export const BillingAddressSection: FC<BillingAddressSectionProps> = ({
 
 /**
  * Hook to get billing address validation info.
+ * 中国模式下使用固定字段校验。
  */
 export const useBillingAddressValidation = (countryCode: CountryCode) => {
 	const { orderedAddressFields, getFieldLabel, isRequiredField } = useAddressFormUtils(countryCode);
 
-	const validateBillingAddress = (formData: Record<string, string>): Record<string, string> => {
+	const validateBillingAddress = (
+		formData: Record<string, string>,
+		chinaMode = false,
+	): Record<string, string> => {
 		const errors: Record<string, string> = {};
-		orderedAddressFields.forEach((field) => {
-			if (isRequiredField(field) && !formData[field]) {
-				errors[field] = `${getFieldLabel(field)} 是必填项`;
-			}
-		});
+		if (chinaMode) {
+			if (!formData.countryArea) errors.countryArea = "省 / 直辖市 是必填项";
+			if (!formData.city) errors.city = "市 是必填项";
+			if (!formData.streetAddress1) errors.streetAddress1 = "详细地址 是必填项";
+			if (!formData.firstName) errors.firstName = "收件人 是必填项";
+			if (!formData.phone) errors.phone = "手机号 是必填项";
+		} else {
+			orderedAddressFields.forEach((field) => {
+				if (isRequiredField(field) && !formData[field]) {
+					errors[field] = `${getFieldLabel(field)} 是必填项`;
+				}
+			});
+		}
 		return errors;
 	};
 

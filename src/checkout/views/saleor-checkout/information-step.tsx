@@ -21,6 +21,7 @@ import { useUser } from "@/checkout/hooks/use-user";
 import { getQueryParams, createQueryString } from "@/checkout/lib/utils/url";
 import { localeConfig } from "@/config/locale";
 import { getStepNumber } from "./flow";
+import { useChinaAddressForm } from "@/checkout/lib/use-china-address-form";
 
 // Extracted components
 import { SignInForm, ResetPasswordForm } from "@/checkout/components/contact";
@@ -48,10 +49,14 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 	const { user, authenticated } = useUser();
 	const { availableShippingCountries } = useAvailableShippingCountries();
 	const shippingAddress = checkout.shippingAddress;
+	const useChinaForm = useChinaAddressForm();
 
-	// Default country: use checkout's address, or first available country from channel
-	const defaultCountry =
-		(shippingAddress?.country?.code as CountryCode) || availableShippingCountries[0] || ("US" as CountryCode);
+	// Default country: 中国模式固定 CN；否则使用 checkout 地址或 channel 首选国家
+	const defaultCountry = useChinaForm
+		? ("CN" as CountryCode)
+		: (shippingAddress?.country?.code as CountryCode) ||
+			availableShippingCountries[0] ||
+			("US" as CountryCode);
 
 	// Mutations
 	const [, updateEmail] = useCheckoutEmailUpdateMutation();
@@ -72,6 +77,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 	const [subscribeNews, setSubscribeNews] = useState(false);
 
 	// ----- Address form state (for guests/new address) -----
+	// 中国模式下始终固定 CN；普通模式跟随 defaultCountry
 	const [countryCode, setCountryCode] = useState<CountryCode>(defaultCountry);
 	const [formData, setFormData] = useState<Record<string, string>>(() => ({
 		firstName: shippingAddress?.firstName || "",
@@ -121,9 +127,14 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 	}, [checkout.email]);
 
 	// Sync form data with checkout's shipping address - but only when NOT entering a new address
+	// 中国模式时 countryCode 固定为 CN，否则从地址或 defaultCountry 取
 	useEffect(() => {
 		if (shippingAddress && !showNewAddressForm) {
-			setCountryCode((shippingAddress.country?.code as CountryCode) || defaultCountry);
+			setCountryCode(
+				useChinaForm
+					? ("CN" as CountryCode)
+					: (shippingAddress.country?.code as CountryCode) || defaultCountry,
+			);
 			setFormData({
 				firstName: shippingAddress.firstName || "",
 				lastName: shippingAddress.lastName || "",
@@ -137,7 +148,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 				phone: shippingAddress.phone || "",
 			});
 		}
-	}, [shippingAddress, showNewAddressForm]);
+	}, [shippingAddress, showNewAddressForm, useChinaForm, defaultCountry]);
 
 	// Update selected address when user data loads
 	useEffect(() => {
@@ -260,6 +271,13 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 					if (!selectedAddressId) {
 						newErrors.address = "请选择一个收货地址";
 					}
+				} else if (useChinaForm) {
+					// 中国模式：省、市、详细地址、姓名（合并）、手机
+					if (!formData.countryArea) newErrors.countryArea = "省 / 直辖市 是必填项";
+					if (!formData.city) newErrors.city = "市 是必填项";
+					if (!formData.streetAddress1) newErrors.streetAddress1 = "详细地址 是必填项";
+					if (!formData.firstName) newErrors.firstName = "收件人 是必填项";
+					if (!formData.phone) newErrors.phone = "手机号 是必填项";
 				} else {
 					orderedAddressFields.forEach((field) => {
 						if (isRequiredField(field) && !formData[field]) {
@@ -379,6 +397,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 			getFieldLabel,
 			formData,
 			countryCode,
+			useChinaForm,
 			updateEmail,
 			userRegister,
 			updateShippingAddress,
@@ -461,6 +480,7 @@ export const InformationStep: FC<InformationStepProps> = ({ checkout, onNext }) 
 					getFieldLabel={getFieldLabel}
 					isRequiredField={isRequiredField}
 					countryAreaChoices={countryAreaChoices}
+					useChinaForm={useChinaForm}
 				/>
 			)}
 
