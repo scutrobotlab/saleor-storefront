@@ -60,7 +60,8 @@ export const AddressDisplay: FC<AddressDisplayProps> = ({ address, title, classN
 			)}
 			<div className="space-y-0.5 text-muted-foreground">
 				<p className="font-medium text-foreground">
-					{address.firstName} {address.lastName}
+					{address.lastName}
+					{address.firstName}
 				</p>
 				{address.companyName && <p>{address.companyName}</p>}
 				<p>{address.streetAddress1}</p>

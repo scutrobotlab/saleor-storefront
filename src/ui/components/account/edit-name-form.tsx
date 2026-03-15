@@ -40,9 +40,7 @@ export function EditNameForm({ firstName, lastName }: Props) {
 			<div className="flex items-center justify-between">
 				<div>
 					<p className="text-sm text-muted-foreground">姓名</p>
-					<p className="font-medium">
-						{firstName || lastName ? `${firstName} ${lastName}`.trim() : "未设置"}
-					</p>
+					<p className="font-medium">{firstName || lastName ? `${lastName}${firstName}`.trim() : "未设置"}</p>
 				</div>
 				<div className="flex items-center gap-2">
 					{success && (
@@ -65,7 +63,19 @@ export function EditNameForm({ firstName, lastName }: Props) {
 					{error}
 				</p>
 			)}
+			{/* 中国习惯：先姓后名 */}
 			<div className="grid gap-4 sm:grid-cols-2">
+				<div className="space-y-1.5">
+					<Label htmlFor="lastName">姓</Label>
+					<Input
+						id="lastName"
+						name="lastName"
+						autoComplete="family-name"
+						defaultValue={lastName}
+						placeholder="姓"
+						required
+					/>
+				</div>
 				<div className="space-y-1.5">
 					<Label htmlFor="firstName">名</Label>
 					<Input
@@ -73,12 +83,9 @@ export function EditNameForm({ firstName, lastName }: Props) {
 						name="firstName"
 						autoComplete="given-name"
 						defaultValue={firstName}
+						placeholder="名"
 						required
 					/>
-				</div>
-				<div className="space-y-1.5">
-					<Label htmlFor="lastName">姓</Label>
-					<Input id="lastName" name="lastName" autoComplete="family-name" defaultValue={lastName} required />
 				</div>
 			</div>
 			<div className="flex gap-2">

@@ -131,7 +131,8 @@ export const AddressSelector: FC<AddressSelectorProps> = ({
 						<div className="flex-1 space-y-1">
 							<div className="flex items-center gap-2">
 								<span className="font-medium">
-									{address.firstName} {address.lastName}
+									{address.lastName}
+									{address.firstName}
 								</span>
 								{isDefault && (
 									<span className="rounded bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">

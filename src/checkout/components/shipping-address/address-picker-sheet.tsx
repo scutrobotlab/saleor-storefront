@@ -53,8 +53,9 @@ export const AddressPickerSheet: FC<AddressPickerSheetProps> = ({
 			if (a.id === defaultAddressId) return -1;
 			if (b.id === defaultAddressId) return 1;
 			// Then alphabetically by name
-			const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
-			const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+			// 本土化：先姓后名排序
+			const nameA = `${a.lastName}${a.firstName}`.toLowerCase();
+			const nameB = `${b.lastName}${b.firstName}`.toLowerCase();
 			return nameA.localeCompare(nameB);
 		});
 	}, [addresses, defaultAddressId]);
@@ -108,7 +109,8 @@ export const AddressPickerSheet: FC<AddressPickerSheetProps> = ({
 										<div className="min-w-0 flex-1">
 											<div className="flex items-center gap-2">
 												<span className="truncate font-medium">
-													{address.firstName} {address.lastName}
+													{address.lastName}
+													{address.firstName}
 												</span>
 												{isDefault && (
 													<span className="shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">

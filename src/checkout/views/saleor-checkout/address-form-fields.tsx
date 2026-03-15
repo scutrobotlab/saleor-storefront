@@ -21,9 +21,9 @@ export const addressFieldIcons: Partial<Record<AddressField, LucideIcon>> = {
 	phone: Phone,
 };
 
-/** Fields that should be grouped in a 2-column row */
+/** 本土化：先姓后名，两列排布 */
 export const addressFieldPairs: [AddressField, AddressField][] = [
-	["firstName", "lastName"],
+	["lastName", "firstName"],
 	["city", "postalCode"],
 ];
 

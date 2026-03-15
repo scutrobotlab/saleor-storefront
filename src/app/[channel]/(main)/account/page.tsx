@@ -21,7 +21,11 @@ export default async function AccountOverviewPage() {
 		? user.addresses.find((a) => a.id === user.defaultShippingAddress?.id) ?? user.addresses[0]
 		: null;
 
-	const displayName = user?.firstName || user?.email.split("@")[0] || "";
+	// 本土化：先姓后名
+	const displayName =
+		user?.lastName || user?.firstName
+			? `${user.lastName ?? ""}${user.firstName ?? ""}`.trim()
+			: user?.email?.split("@")[0] ?? "";
 
 	return (
 		<div className="space-y-8">

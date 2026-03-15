@@ -24,17 +24,17 @@ const DEFAULT_ADDRESS_FIELDS: AddressField[] = [
 
 export type AddressFieldLabel = Exclude<AddressField, "countryCode"> | "country";
 export const addressFieldMessages: Record<AddressFieldLabel, string> = {
-	city: "City",
-	firstName: "First name",
-	countryArea: "Country area",
-	lastName: "Last name",
-	country: "Country",
-	cityArea: "City area",
-	postalCode: "Postal code",
-	companyName: "Company",
-	streetAddress1: "Street address",
-	streetAddress2: "Apartment, suite, etc.",
-	phone: "Phone number",
+	city: "市",
+	firstName: "名",
+	countryArea: "省/州",
+	lastName: "姓",
+	country: "国家",
+	cityArea: "区/县",
+	postalCode: "邮编",
+	companyName: "公司",
+	streetAddress1: "详细地址",
+	streetAddress2: "补充地址",
+	phone: "电话",
 };
 
 export type LocalizedAddressFieldLabel =

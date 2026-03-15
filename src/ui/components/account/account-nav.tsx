@@ -64,7 +64,8 @@ export function AccountNav() {
 					</div>
 				)}
 				<p className="font-semibold leading-tight">
-					{user.firstName} {user.lastName}
+					{user.lastName}
+					{user.firstName}
 				</p>
 				<p className="mt-0.5 text-sm text-muted-foreground">{user.email}</p>
 			</div>

@@ -68,7 +68,8 @@ export const AddressCard: FC<AddressCardProps> = ({
 			<div className="min-w-0 flex-1">
 				<div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
 					<span className="font-medium">
-						{address.firstName} {address.lastName}
+						{address.lastName}
+						{address.firstName}
 					</span>
 					{isDefault && (
 						<span className="w-fit rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">

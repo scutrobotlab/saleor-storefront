@@ -170,7 +170,8 @@ function OrderAddress({ title, address }: { title: string; address: AddressDetai
 				<MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 				<div className="text-sm leading-relaxed">
 					<p className="font-medium">
-						{address.firstName} {address.lastName}
+						{address.lastName}
+						{address.firstName}
 					</p>
 					<p className="text-muted-foreground">{address.streetAddress1}</p>
 					{address.streetAddress2 && <p className="text-muted-foreground">{address.streetAddress2}</p>}

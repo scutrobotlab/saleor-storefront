@@ -138,8 +138,22 @@ export function SignUpForm() {
 						</div>
 					)}
 
-					{/* Name fields */}
+					{/* 本土化：先姓后名 */}
 					<div className="grid grid-cols-2 gap-4">
+						<div className="space-y-1.5">
+							<Label htmlFor="lastName" className="text-sm font-medium">
+								姓
+							</Label>
+							<Input
+								id="lastName"
+								type="text"
+								placeholder="姓"
+								autoComplete="family-name"
+								value={lastName}
+								onChange={(e) => setLastName(e.target.value)}
+								className="h-12"
+							/>
+						</div>
 						<div className="space-y-1.5">
 							<Label htmlFor="firstName" className="text-sm font-medium">
 								名
@@ -156,20 +170,6 @@ export function SignUpForm() {
 									className="h-12 pl-10"
 								/>
 							</div>
-						</div>
-						<div className="space-y-1.5">
-							<Label htmlFor="lastName" className="text-sm font-medium">
-								姓
-							</Label>
-							<Input
-								id="lastName"
-								type="text"
-								placeholder="姓"
-								autoComplete="family-name"
-								value={lastName}
-								onChange={(e) => setLastName(e.target.value)}
-								className="h-12"
-							/>
 						</div>
 					</div>
 
