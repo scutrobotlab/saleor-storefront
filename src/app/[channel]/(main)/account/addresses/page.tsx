@@ -9,7 +9,6 @@ export default async function AddressesPage() {
 
 	const { addresses } = user;
 	const defaultShippingId = user.defaultShippingAddress?.id;
-	const defaultBillingId = user.defaultBillingAddress?.id;
 
 	return (
 		<div className="space-y-6">
@@ -32,18 +31,11 @@ export default async function AddressesPage() {
 				<div className="grid gap-4 sm:grid-cols-2">
 					{addresses.map((address) => {
 						const isDefaultShipping = address.id === defaultShippingId;
-						const isDefaultBilling = address.id === defaultBillingId;
 
 						return (
-							<AccountAddressCard
-								key={address.id}
-								address={address}
-								isDefaultShipping={isDefaultShipping}
-								isDefaultBilling={isDefaultBilling}
-							>
+							<AccountAddressCard key={address.id} address={address} isDefaultShipping={isDefaultShipping}>
 								<AddressFormDialog address={address} />
 								{!isDefaultShipping && <SetDefaultAddressButton addressId={address.id} type="SHIPPING" />}
-								{!isDefaultBilling && <SetDefaultAddressButton addressId={address.id} type="BILLING" />}
 								<DeleteAddressButton addressId={address.id} />
 							</AccountAddressCard>
 						);

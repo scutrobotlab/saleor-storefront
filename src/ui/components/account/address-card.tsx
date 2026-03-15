@@ -4,18 +4,11 @@ import { cn } from "@/lib/utils";
 type Props = {
 	address: AddressDetailsFragment;
 	isDefaultShipping?: boolean;
-	isDefaultBilling?: boolean;
 	className?: string;
 	children?: React.ReactNode;
 };
 
-export function AccountAddressCard({
-	address,
-	isDefaultShipping,
-	isDefaultBilling,
-	className,
-	children,
-}: Props) {
+export function AccountAddressCard({ address, isDefaultShipping, className, children }: Props) {
 	return (
 		<div className={cn("rounded-lg border p-4", className)}>
 			<div className="flex items-start justify-between gap-4">
@@ -29,11 +22,6 @@ export function AccountAddressCard({
 						{isDefaultShipping && (
 							<span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
 								默认收货地址
-							</span>
-						)}
-						{isDefaultBilling && (
-							<span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
-								默认账单地址
 							</span>
 						)}
 					</div>

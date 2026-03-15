@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle, Mail, MapPin, Package, CreditCard } from "lucide-react";
+import { CheckCircle, Mail, MapPin, Package } from "lucide-react";
 import { useOrder } from "@/checkout/hooks/use-order";
 import { OrderSummary } from "@/checkout/views/saleor-checkout/order-summary";
 import { CheckoutHeader } from "@/checkout/views/saleor-checkout/checkout-header";
@@ -39,7 +39,6 @@ export const OrderConfirmation = () => {
 	});
 
 	const shippingAddress = order.shippingAddress;
-	const billingAddress = order.billingAddress;
 	const email = order.userEmail || "";
 
 	return (
@@ -92,15 +91,6 @@ export const OrderConfirmation = () => {
 												<div>
 													<p className="text-sm font-medium">配送地址</p>
 													<p className="text-sm text-muted-foreground">{formatAddress(shippingAddress)}</p>
-												</div>
-											</div>
-										)}
-										{billingAddress && (
-											<div className="flex items-start gap-3">
-												<CreditCard className="mt-0.5 h-5 w-5 text-muted-foreground" />
-												<div>
-													<p className="text-sm font-medium">账单地址</p>
-													<p className="text-sm text-muted-foreground">{formatAddress(billingAddress)}</p>
 												</div>
 											</div>
 										)}

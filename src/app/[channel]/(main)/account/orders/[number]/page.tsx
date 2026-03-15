@@ -136,7 +136,6 @@ export default async function OrderDetailPage({ params }: Props) {
 
 				<div className="space-y-4">
 					{order.shippingAddress && <OrderAddress title="收货地址" address={order.shippingAddress} />}
-					{order.billingAddress && <OrderAddress title="账单地址" address={order.billingAddress} />}
 
 					{order.isPaid && (
 						<div className="rounded-xl border px-5 py-4">

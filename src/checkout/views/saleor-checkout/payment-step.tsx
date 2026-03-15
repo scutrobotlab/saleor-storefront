@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, type FC } from "react";
+import { useState, useCallback, type FC } from "react";
 import { ChevronLeft, AlertCircle, Smartphone, Monitor } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/ui/components/ui/button";
@@ -14,15 +14,13 @@ import {
 	useCheckoutCompleteMutation,
 } from "@/checkout/graphql";
 import { useCheckout } from "@/checkout/hooks/use-checkout";
-import { useUser } from "@/checkout/hooks/use-user";
 import { getAddressInputData } from "@/checkout/components/address-form/utils";
 import { createQueryString } from "@/checkout/lib/utils/url";
 import { localeConfig } from "@/config/locale";
 import { MobileStickyAction } from "./mobile-sticky-action";
 import { getStepNumber } from "./flow";
 
-// Extracted reusable components
-import { BillingAddressSection, type BillingAddressData } from "@/checkout/components/payment";
+// 中国本土化：无寄送账单概念，不展示账单地址，结账时用收货地址作为账单
 import { WechatPayment, type WechatPaymentData } from "@/checkout/components/payment/wechat-payment";
 import { LoadingSpinner } from "@/checkout/ui-kit/loading-spinner";
 import { formatMoneyWithFallback } from "@/checkout/lib/utils/money";
@@ -50,58 +48,13 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 	const checkout = liveCheckout || initialCheckout;
 
 	// Get user data for saved addresses
-	const { user, authenticated } = useUser();
-
-	// For digital products, there's no shipping address, so can't use "same as billing"
 	const isShippingRequired = checkout.isShippingRequired;
-	const hasShippingAddress = !!checkout.shippingAddress;
 
 	// WeChat payment state (set after transactionInitialize succeeds)
 	const [wechatData, setWechatData] = useState<{
 		transactionId: string;
 		payData: WechatPaymentData;
 	} | null>(null);
-
-	// Billing address state
-	const [sameAsBilling, setSameAsBilling] = useState(isShippingRequired && hasShippingAddress);
-	// Lazy initialization - complex object only created once on mount
-	const [billingData, setBillingData] = useState<BillingAddressData>(() => ({
-		countryCode: (checkout.billingAddress?.country?.code as CountryCode) || "US",
-		formData: {
-			firstName: checkout.billingAddress?.firstName || "",
-			lastName: checkout.billingAddress?.lastName || "",
-			streetAddress1: checkout.billingAddress?.streetAddress1 || "",
-			streetAddress2: checkout.billingAddress?.streetAddress2 || "",
-			companyName: checkout.billingAddress?.companyName || "",
-			city: checkout.billingAddress?.city || "",
-			postalCode: checkout.billingAddress?.postalCode || "",
-			countryArea: checkout.billingAddress?.countryArea || "",
-			phone: checkout.billingAddress?.phone || "",
-		},
-	}));
-
-	// Sync billing address from server state
-	useEffect(() => {
-		const billing = checkout.billingAddress;
-		if (billing) {
-			setBillingData((prev) => ({
-				...prev,
-				countryCode: (billing.country?.code as CountryCode) || "US",
-				formData: {
-					firstName: billing.firstName || "",
-					lastName: billing.lastName || "",
-					streetAddress1: billing.streetAddress1 || "",
-					streetAddress2: billing.streetAddress2 || "",
-					companyName: billing.companyName || "",
-					city: billing.city || "",
-					postalCode: billing.postalCode || "",
-					countryArea: billing.countryArea || "",
-					cityArea: billing.cityArea || "",
-					phone: billing.phone || "",
-				},
-			}));
-		}
-	}, [checkout.billingAddress]);
 
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [errors, setErrors] = useState<Record<string, string>>({});
@@ -121,11 +74,6 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 		typeof navigator !== "undefined" && /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
 
 	const shippingAddress = checkout.shippingAddress;
-
-	// Memoize billing data handler to avoid infinite loops
-	const handleBillingDataChange = useCallback((data: BillingAddressData) => {
-		setBillingData(data);
-	}, []);
 
 	// Summary rows for context display
 	const summaryRows = buildPaymentSummaryRows(checkout);
@@ -171,57 +119,11 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 			if (event) event.preventDefault();
 			setErrors({});
 
-			const needsBillingForm = !sameAsBilling || !hasShippingAddress;
 			setIsProcessing(true);
 
 			try {
-				// ── Step 1: Update billing address ────────────────────────────────────
-				if (needsBillingForm) {
-					let addressInput;
-					if (billingData.selectedAddressId && user?.addresses) {
-						const selectedAddress = user.addresses.find((addr) => addr.id === billingData.selectedAddressId);
-						if (selectedAddress) {
-							addressInput = getAddressInputData({
-								firstName: selectedAddress.firstName || "",
-								lastName: selectedAddress.lastName || "",
-								streetAddress1: selectedAddress.streetAddress1 || "",
-								streetAddress2: selectedAddress.streetAddress2 || "",
-								companyName: selectedAddress.companyName || "",
-								city: selectedAddress.city || "",
-								postalCode: selectedAddress.postalCode || "",
-								countryArea: selectedAddress.countryArea || "",
-								phone: selectedAddress.phone || "",
-								countryCode: selectedAddress.country?.code as CountryCode,
-							});
-						}
-					}
-					if (!addressInput) {
-						addressInput = getAddressInputData({
-							...billingData.formData,
-							countryCode: billingData.countryCode,
-						});
-					}
-					const result = await updateBillingAddress({
-						checkoutId: checkout.id,
-						billingAddress: addressInput,
-						languageCode: localeConfig.graphqlLanguageCode,
-					});
-					if (result.error) {
-						setErrors({ streetAddress1: "更新账单地址失败" });
-						return;
-					}
-					const billingErrors = result.data?.checkoutBillingAddressUpdate?.errors;
-					if (billingErrors?.length) {
-						const errorMap: Record<string, string> = {};
-						billingErrors.forEach((err) => {
-							const field = err.field || "streetAddress1";
-							errorMap[field] = err.message || "无效值";
-						});
-						setErrors(errorMap);
-						document.querySelector<HTMLElement>(`[name="${Object.keys(errorMap)[0]}"]`)?.focus();
-						return;
-					}
-				} else if (shippingAddress) {
+				// 中国本土化：无账单概念，用收货地址同步为账单地址（后端仍需 billing）
+				if (shippingAddress) {
 					const addressInput = getAddressInputData({
 						firstName: shippingAddress.firstName || "",
 						lastName: shippingAddress.lastName || "",
@@ -231,14 +133,24 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 						city: shippingAddress.city || "",
 						postalCode: shippingAddress.postalCode || "",
 						countryArea: shippingAddress.countryArea || "",
+						cityArea: (shippingAddress as AddressFragment & { cityArea?: string }).cityArea || "",
 						phone: shippingAddress.phone || "",
 						countryCode: shippingAddress.country?.code as CountryCode,
 					});
-					await updateBillingAddress({
+					const result = await updateBillingAddress({
 						checkoutId: checkout.id,
 						billingAddress: addressInput,
 						languageCode: localeConfig.graphqlLanguageCode,
 					});
+					if (result.error) {
+						setErrors({ payment: "更新地址失败，请重试。" });
+						return;
+					}
+					const billingErrors = result.data?.checkoutBillingAddressUpdate?.errors;
+					if (billingErrors?.length) {
+						setErrors({ payment: billingErrors[0]?.message ?? "地址无效" });
+						return;
+					}
 				}
 
 				// ── Step 2: Initialize payment ────────────────────────────────────────
@@ -286,10 +198,6 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 			}
 		},
 		[
-			sameAsBilling,
-			hasShippingAddress,
-			billingData,
-			user?.addresses,
 			shippingAddress,
 			checkout.id,
 			hasAnyGateway,
@@ -394,19 +302,6 @@ export const PaymentStep: FC<PaymentStepProps> = ({
 					</div>
 				</section>
 			)}
-
-			{/* Billing Address */}
-			<BillingAddressSection
-				billingAddress={checkout.billingAddress}
-				shippingAddress={shippingAddress}
-				userAddresses={authenticated ? (user?.addresses as AddressFragment[]) : undefined}
-				defaultBillingAddressId={user?.defaultBillingAddress?.id}
-				isShippingRequired={isShippingRequired}
-				errors={errors}
-				onChange={handleBillingDataChange}
-				onSameAsShippingChange={setSameAsBilling}
-				initialSameAsShipping={sameAsBilling}
-			/>
 
 			{/* Error Display */}
 			{errors.payment && (

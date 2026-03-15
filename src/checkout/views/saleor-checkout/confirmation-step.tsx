@@ -2,7 +2,7 @@
 
 import { type FC, useState } from "react";
 import Link from "next/link";
-import { CheckCircle, Mail, MapPin, Package, CreditCard } from "lucide-react";
+import { CheckCircle, Mail, MapPin, Package } from "lucide-react";
 import { type CheckoutFragment } from "@/checkout/graphql";
 import { localeConfig } from "@/config/locale";
 
@@ -26,7 +26,6 @@ function formatAddress(address: CheckoutFragment["shippingAddress"] | CheckoutFr
 export const ConfirmationStep: FC<ConfirmationStepProps> = ({ checkout }) => {
 	const channel = checkout.channel.slug;
 	const shippingAddress = checkout.shippingAddress;
-	const billingAddress = checkout.billingAddress;
 	const email = checkout.email || "";
 
 	// Generate a demo order number
@@ -85,15 +84,6 @@ export const ConfirmationStep: FC<ConfirmationStepProps> = ({ checkout }) => {
 							<div className="min-w-0 flex-1">
 								<p className="text-sm font-medium">配送地址</p>
 								<p className="break-words text-sm text-muted-foreground">{formatAddress(shippingAddress)}</p>
-							</div>
-						</div>
-					)}
-					{billingAddress && (
-						<div className="flex items-start gap-3">
-							<CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-							<div className="min-w-0 flex-1">
-								<p className="text-sm font-medium">账单地址</p>
-								<p className="break-words text-sm text-muted-foreground">{formatAddress(billingAddress)}</p>
 							</div>
 						</div>
 					)}
