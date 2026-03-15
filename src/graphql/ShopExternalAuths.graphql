@@ -1,0 +1,8 @@
+query ShopExternalAuths {
+	shop {
+		availableExternalAuthentications {
+			id
+			name
+		}
+	}
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
@@ -10,6 +10,12 @@ import { Input } from "@/ui/components/ui/input";
 import { Label } from "@/ui/components/ui/label";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SALEOR_API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL;
+
+interface ExternalAuth {
+	id: string;
+	name: string | null;
+}
 
 export function LoginMode() {
 	const router = useRouter();
@@ -23,6 +29,81 @@ export function LoginMode() {
 	const [error, setError] = useState("");
 	const [resetMessage, setResetMessage] = useState("");
 	const [resetEmailSent, setResetEmailSent] = useState(false);
+	const [externalAuths, setExternalAuths] = useState<ExternalAuth[]>([]);
+	const [oidcLoading, setOidcLoading] = useState<string | null>(null);
+
+	// 拉取 Dashboard 配置的 OpenID Connect 等外部登录方式
+	useEffect(() => {
+		if (!SALEOR_API_URL) return;
+		fetch(SALEOR_API_URL, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				query: `query ShopExternalAuths { shop { availableExternalAuthentications { id name } } }`,
+			}),
+		})
+			.then(
+				(res) =>
+					res.json() as Promise<{ data?: { shop?: { availableExternalAuthentications?: ExternalAuth[] } } }>,
+			)
+			.then((json) => {
+				const list = json.data?.shop?.availableExternalAuthentications ?? [];
+				setExternalAuths(list);
+			})
+			.catch(() => {});
+	}, []);
+
+	const handleExternalLogin = async (pluginId: string) => {
+		if (!SALEOR_API_URL || !params.channel) return;
+		setOidcLoading(pluginId);
+		setError("");
+		const redirectUri = `${typeof window !== "undefined" ? window.location.origin : ""}/${
+			params.channel
+		}/login/oidc-callback`;
+		try {
+			const res = await fetch(SALEOR_API_URL, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					query: `mutation ExternalAuthenticationUrl($pluginId: String!, $input: JSONString!) {
+						externalAuthenticationUrl(pluginId: $pluginId, input: $input) {
+							authenticationData
+							accountErrors { code message field }
+						}
+					}`,
+					variables: {
+						pluginId,
+						input: JSON.stringify({ redirectUri }),
+					},
+				}),
+			});
+			const json = (await res.json()) as {
+				data?: {
+					externalAuthenticationUrl?: {
+						authenticationData?: string | null;
+						accountErrors: Array<{ message?: string | null }>;
+					};
+				};
+			};
+			const errs = json.data?.externalAuthenticationUrl?.accountErrors;
+			if (errs?.length) {
+				setError(errs[0]?.message ?? "获取登录地址失败");
+				return;
+			}
+			const raw = json.data?.externalAuthenticationUrl?.authenticationData;
+			const data = raw ? (JSON.parse(raw) as { authorizationUrl?: string }) : null;
+			const url = data?.authorizationUrl;
+			if (url) {
+				window.location.href = url;
+			} else {
+				setError("未返回登录地址");
+			}
+		} catch {
+			setError("请求失败");
+		} finally {
+			setOidcLoading(null);
+		}
+	};
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -199,6 +280,33 @@ export function LoginMode() {
 					<Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base font-semibold">
 						{isSubmitting ? "登录中…" : "登录"}
 					</Button>
+
+					{externalAuths.length > 0 && (
+						<>
+							<div className="relative my-6">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t border-border" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-card px-2 text-muted-foreground">或</span>
+								</div>
+							</div>
+							<div className="space-y-2">
+								{externalAuths.map((auth) => (
+									<Button
+										key={auth.id}
+										type="button"
+										variant="outline-solid"
+										className="h-12 w-full text-base font-medium"
+										disabled={!!oidcLoading}
+										onClick={() => handleExternalLogin(auth.id)}
+									>
+										{oidcLoading === auth.id ? "跳转中…" : `使用 ${auth.name ?? "第三方"} 登录`}
+									</Button>
+								))}
+							</div>
+						</>
+					)}
 				</form>
 			</div>
 		</div>

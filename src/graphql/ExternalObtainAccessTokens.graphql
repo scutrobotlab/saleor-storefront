@@ -1,0 +1,16 @@
+mutation ExternalObtainAccessTokens($pluginId: String!, $input: JSONString!) {
+	externalObtainAccessTokens(pluginId: $pluginId, input: $input) {
+		token
+		refreshToken
+		csrfToken
+		user {
+			id
+			email
+		}
+		accountErrors {
+			code
+			message
+			field
+		}
+	}
+}
